@@ -1,4 +1,4 @@
-import { Form } from './index'
+import { FormBuilder } from './index'
 
 interface IMyForm {
   question1: number
@@ -11,7 +11,7 @@ export function Test() {
     question2: 'answer'
   }
 
-  const builder = new Form<IMyForm>(myForm)
+  const builder = new FormBuilder<IMyForm>(myForm)
 
   builder.NumberQuestion((x) => x.question1).IsRequired()
   builder

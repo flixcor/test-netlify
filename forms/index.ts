@@ -23,7 +23,7 @@ class QuestionBuilder<TForm, TQuestionType> implements IQuestionBuilder {
 class StringQuestionBuilder<T> extends QuestionBuilder<T, string> {}
 class NumberQuestionBuilder<T> extends QuestionBuilder<T, number> {}
 
-export class Form<T> {
+export class FormBuilder<T> {
   private form: T
 
   private questionBuilders: Record<string, IQuestionBuilder> = {}
