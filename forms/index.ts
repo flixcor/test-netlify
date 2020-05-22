@@ -1,20 +1,19 @@
 type QuestionType = string | number
 type GroupType = object
+type FormElementType = QuestionType | GroupType
 
 interface IQuestionBuilder<TForm extends object> {
   isRequired: (form: TForm) => boolean
   isActive: (form: TForm) => boolean
 }
 
-class QuestionBuilder<
-  TForm extends object,
-  TQuestionType extends QuestionType | GroupType
-> implements IQuestionBuilder<TForm> {
-  path: (x: TForm) => TQuestionType
+class FormElementBuilder<TForm extends object, TElement extends FormElementType>
+  implements IQuestionBuilder<TForm> {
+  path: (x: TForm) => TElement
   isRequired: (form: TForm) => boolean = () => false
   isActive: (form: TForm) => boolean = () => true
 
-  constructor(path: (x: TForm) => TQuestionType) {
+  constructor(path: (x: TForm) => TElement) {
     this.path = path
   }
 
@@ -39,15 +38,15 @@ export class FormBuilder<T extends object> {
   }
 
   public question<Qt extends QuestionType>(path: (x: T) => Qt) {
-    return this.getQuestionBuilder(path)
+    return this.getElementBuilder(path)
   }
 
   public group<Gt extends GroupType>(path: (x: T) => Gt) {
-    return this.getQuestionBuilder(path)
+    return this.getElementBuilder(path)
   }
 
-  public getStatus<Qt extends QuestionType | GroupType>(path: (x: T) => Qt) {
-    const builder = this.getQuestionBuilder(path)
+  public getStatus<Qt extends FormElementType>(path: (x: T) => Qt) {
+    const builder = this.getElementBuilder(path)
     const pathStr = this.getPathString(path)
 
     return {
@@ -74,24 +73,20 @@ export class FormBuilder<T extends object> {
     return this.isActiveRecursive(path, level + 1)
   }
 
-  private getPathString<Qt extends QuestionType | GroupType>(
-    path: (x: T) => Qt
-  ) {
+  private getPathString<Et extends FormElementType>(path: (x: T) => Et) {
     const str = path.toString()
     const skipFirstPart = str.substring(str.indexOf('.') + 1)
     const skipLastPart = skipFirstPart.substring(0, skipFirstPart.indexOf(';'))
     return skipLastPart
   }
 
-  private getQuestionBuilder<Qt extends QuestionType | GroupType>(
-    path: (x: T) => Qt
-  ) {
+  private getElementBuilder<Et extends FormElementType>(path: (x: T) => Et) {
     const pathStr = this.getPathString(path)
 
-    let builder = <QuestionBuilder<T, Qt>>this.questionBuilders[pathStr]
+    let builder = <FormElementBuilder<T, Et>>this.questionBuilders[pathStr]
 
     if (!builder) {
-      builder = new QuestionBuilder<T, Qt>(path)
+      builder = new FormElementBuilder<T, Et>(path)
       this.questionBuilders[pathStr] = builder
     }
 
