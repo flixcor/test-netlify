@@ -25,10 +25,14 @@
 <script lang="ts">
 import Vue from 'vue'
 import Logo from '~/components/Logo.vue'
+import { test } from '~/forms/test'
 
 export default Vue.extend({
   components: {
     Logo
+  },
+  mounted() {
+    console.log(test() ? 'test passed' : 'test failed')
   },
   head() {
     return {

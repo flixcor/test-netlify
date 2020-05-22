@@ -56,13 +56,14 @@ export class FormBuilder<T extends object> {
     }
   }
 
-  private isActiveRecursive(path: string, level: number = 0): boolean {
+  private isActiveRecursive(path: string, level: number = 1): boolean {
     const split = path.split('.')
-    const currentPath = split.slice(level, split.length).join('.')
 
-    if (!currentPath.length) {
+    if (level > split.length) {
       return true
     }
+
+    const currentPath = split.slice(0, level).join('.')
 
     const builder = this.questionBuilders[currentPath]
 
@@ -77,7 +78,9 @@ export class FormBuilder<T extends object> {
     path: (x: T) => Qt
   ) {
     const str = path.toString()
-    return str.substring(str.indexOf('.') + 1)
+    const skipFirstPart = str.substring(str.indexOf('.') + 1)
+    const skipLastPart = skipFirstPart.substring(0, skipFirstPart.indexOf(';'))
+    return skipLastPart
   }
 
   private getQuestionBuilder<Qt extends QuestionType | GroupType>(
