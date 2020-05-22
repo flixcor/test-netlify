@@ -1,6 +1,15 @@
-interface IQuestionBuilder {}
+type QuestionType = string | number
+type GroupType = object
 
-class QuestionBuilder<TForm, TQuestionType> implements IQuestionBuilder {
+interface IQuestionBuilder<TForm extends object> {
+  isRequired: (form: TForm) => boolean
+  isActive: (form: TForm) => boolean
+}
+
+class QuestionBuilder<
+  TForm extends object,
+  TQuestionType extends QuestionType | GroupType
+> implements IQuestionBuilder<TForm> {
   path: (x: TForm) => TQuestionType
   isRequired: (form: TForm) => boolean = () => false
   isActive: (form: TForm) => boolean = () => true
@@ -20,40 +29,66 @@ class QuestionBuilder<TForm, TQuestionType> implements IQuestionBuilder {
   }
 }
 
-class StringQuestionBuilder<T> extends QuestionBuilder<T, string> {}
-class NumberQuestionBuilder<T> extends QuestionBuilder<T, number> {}
-
-export class FormBuilder<T> {
+export class FormBuilder<T extends object> {
   private form: T
 
-  private questionBuilders: Record<string, IQuestionBuilder> = {}
+  private questionBuilders: Record<string, IQuestionBuilder<T>> = {}
 
   constructor(form: T) {
     this.form = form
   }
 
-  public StringQuestion(path: (x: T) => string) {
-    const str = path.toString()
-    const pathStr = str.substring(str.indexOf('.') + 1)
-
-    let builder = <StringQuestionBuilder<T>>this.questionBuilders[pathStr]
-
-    if (!builder) {
-      builder = new StringQuestionBuilder<T>(path)
-      this.questionBuilders[pathStr] = builder
-    }
-
-    return builder
+  public question<Qt extends QuestionType>(path: (x: T) => Qt) {
+    return this.getQuestionBuilder(path)
   }
 
-  public NumberQuestion(path: (x: T) => number) {
-    const str = path.toString()
-    const pathStr = str.substring(str.indexOf('.') + 1)
+  public group<Gt extends GroupType>(path: (x: T) => Gt) {
+    return this.getQuestionBuilder(path)
+  }
 
-    let builder = <NumberQuestionBuilder<T>>this.questionBuilders[pathStr]
+  public getStatus<Qt extends QuestionType | GroupType>(path: (x: T) => Qt) {
+    const builder = this.getQuestionBuilder(path)
+    const pathStr = this.getPathString(path)
+
+    return {
+      required: builder.isRequired(this.form),
+      active: this.isActiveRecursive(pathStr)
+    }
+  }
+
+  private isActiveRecursive(path: string, level: number = 0): boolean {
+    const split = path.split('.')
+    const currentPath = split.slice(level, split.length).join('.')
+
+    if (!currentPath.length) {
+      return true
+    }
+
+    const builder = this.questionBuilders[currentPath]
+
+    if (builder && !builder.isActive(this.form)) {
+      return false
+    }
+
+    return this.isActiveRecursive(path, level + 1)
+  }
+
+  private getPathString<Qt extends QuestionType | GroupType>(
+    path: (x: T) => Qt
+  ) {
+    const str = path.toString()
+    return str.substring(str.indexOf('.') + 1)
+  }
+
+  private getQuestionBuilder<Qt extends QuestionType | GroupType>(
+    path: (x: T) => Qt
+  ) {
+    const pathStr = this.getPathString(path)
+
+    let builder = <QuestionBuilder<T, Qt>>this.questionBuilders[pathStr]
 
     if (!builder) {
-      builder = new NumberQuestionBuilder<T>(path)
+      builder = new QuestionBuilder<T, Qt>(path)
       this.questionBuilders[pathStr] = builder
     }
 
