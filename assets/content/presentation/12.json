@@ -1,6 +1,9 @@
 {
   "pagenumber": 12,
   "title": "Digital nomad",
-  "body": "![](/img/digitalnomad.jpg)\n\n* Wil op reis\n* Mag ook\n* Maar ja",
-  "images": []
+  "body": "* Wil op reis\n* Mag ook\n* Maar ja",
+  "images": [
+    "/img/digitalnomad.jpg",
+    "/img/8560828_2.jpg"
+  ]
 }
