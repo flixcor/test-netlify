@@ -144,7 +144,7 @@ ul {
 }
 
 h2 {
-  font-size: 68px;
+  font-size: 60px;
   font-weight: 700;
 }
 
