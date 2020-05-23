@@ -20,3 +20,16 @@ collections:
       - { label: 'Publish Date', name: 'date', widget: 'datetime' }
       - { label: 'Description', name: 'description', widget: 'string' }
       - { label: 'Body', name: 'body', widget: 'markdown' }
+
+  - name: 'presentation'
+    label: 'Presentation'
+    format: 'json'
+    folder: 'assets/content/presentation'
+    create: true
+    slug: '{{slug}}'
+    editor:
+      preview: false
+    fields:
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: 'Body', name: 'body', widget: 'markdown' }
+      - { label: 'Images', name: 'images', widget: 'list', field: { label: Image, name: image, widget: image } }
