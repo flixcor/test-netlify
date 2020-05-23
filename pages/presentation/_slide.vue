@@ -7,7 +7,7 @@
       </div>
     </transition>
     <div class="card-images">
-      <img v-for="image in slide.images" :key="image" :src="image" />
+      <img v-for="(image, index) in slide.images" :key="index" :src="image" />
     </div>
     <nuxt-link
       v-if="slide.pagenumber > 1"
@@ -73,9 +73,9 @@ export default {
   mounted() {
     const self = this
     window.addEventListener('keydown', (e) => {
-      if (e.code === 'ArrowLeft' && this.showPrevious) {
+      if (e.code === 'ArrowLeft' && this.showPrevious && self.$refs.previous) {
         self.$refs.previous.$el.click()
-      } else if (e.code === 'ArrowRight' && this.showNext) {
+      } else if (e.code === 'ArrowRight' && this.showNext && self.$refs.next) {
         self.$refs.next.$el.click()
       }
     })
@@ -132,11 +132,17 @@ ul {
   list-style-type: none !important;
 }
 
+li {
+  text-indent: -1em;
+  padding-left: 1em;
+  margin-bottom: 15px;
+}
+
 .card-content {
   position: relative;
   z-index: 2;
   font-family: 'Noto Sans KR', sans-serif;
-  font-size: 40px;
+  font-size: 30px;
   font-weight: 400;
   border: 5px solid black;
   height: 100%;
@@ -146,6 +152,7 @@ ul {
 h2 {
   font-size: 60px;
   font-weight: 700;
+  margin-bottom: 25px;
 }
 
 .card-images {
@@ -163,7 +170,7 @@ h2 {
 
 .card-images img {
   width: 300px;
-  height: auto;
+  height: 225px;
 }
 
 a.previous svg {
