@@ -7,7 +7,14 @@
       </div>
     </transition>
     <div class="card-images">
-      <img v-for="(image, index) in slide.images" :key="index" :src="image" />
+      <a
+        v-for="(image, index) in slide.images"
+        :key="index"
+        :href="'#' + (nextTab(index) + 1)"
+        :tabindex="index + 1"
+      >
+        <img :src="image" />
+      </a>
     </div>
     <nuxt-link
       v-if="slide.pagenumber > 1"
@@ -53,6 +60,11 @@ export default {
         slide: await require(`~/assets/content/presentation/${params.slide}.json`)
       }
   },
+  data() {
+    return {
+      currentTab: 0
+    }
+  },
   computed: {
     lastSlideNumber() {
       const pagenumbers = this.$store.state.presentations.map(
@@ -79,6 +91,12 @@ export default {
         self.$refs.next.$el.click()
       }
     })
+  },
+  methods: {
+    nextTab(currentTab) {
+      const { length } = this.slide.images
+      return !length || currentTab === length - 1 ? 0 : currentTab + 1
+    }
   },
   head() {
     return {
@@ -168,9 +186,22 @@ h2 {
   align-content: space-between;
 }
 
-.card-images img {
+.card-images a {
   width: 300px;
   height: 225px;
+}
+
+.card-images a:focus {
+  outline: none;
+}
+
+.card-images a:focus img {
+  border: 5px grey solid;
+}
+
+.card-images img {
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1),
+    0 0px 0 1px rgba(10, 10, 10, 0.02);
 }
 
 a.previous svg {
