@@ -165,6 +165,8 @@ li {
   border: 5px solid black;
   height: 100%;
   padding: 50px;
+  overflow-y: auto;
+  background: white;
 }
 
 h2 {
