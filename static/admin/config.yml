@@ -30,6 +30,6 @@ collections:
     identifier_field: 'pagenumber'
     fields:
       - { label: 'Page number', name: 'pagenumber', widget: 'number'}
-      - { label: 'Title', name: 'title', widget: 'string' }
-      - { label: 'Body', name: 'body', widget: 'markdown' }
-      - { label: 'Images', name: 'images', widget: 'list', field: { label: Image, name: image, widget: image } }
+      - { label: 'Title', name: 'title', widget: 'string', required: false }
+      - { label: 'Body', name: 'body', widget: 'markdown', required: false }
+      - { label: 'Images', name: 'images', widget: 'list', required: false, field: { label: Image, name: image, widget: image } }
