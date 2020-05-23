@@ -1,8 +1,6 @@
 {
-  "title": "Title1",
-  "body": "Paragraph\n\n* bullet\n* bullet",
-  "images": [
-    "/img/butterfly-1-.jpg"
-  ],
+  "title": "Wat doet Flix",
+  "body": "\n\n![Boy behind computer giving the tumbs up](/img/giphy.gif)",
+  "images": [],
   "pagenumber": 1
 }
