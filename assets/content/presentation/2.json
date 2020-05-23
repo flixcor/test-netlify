@@ -1,8 +1,6 @@
 {
-  "title": "Title2",
-  "body": "Paragraph\n\n* List item\n* List item 2",
-  "images": [
-    "/img/butterfly-1-.jpg"
-  ],
+  "title": "Voorgeschiedenis",
+  "body": "![Laughing baby](/img/absoluteglossyblowfish-size_restricted.gif)",
+  "images": [],
   "pagenumber": 2
 }
