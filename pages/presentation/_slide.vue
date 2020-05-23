@@ -181,4 +181,12 @@ a.next svg {
   top: calc(50% - 40px);
   right: -100px;
 }
+
+.card-content img {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
 </style>
