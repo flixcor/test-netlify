@@ -1,56 +1,85 @@
 <template>
   <div class="card">
-    <div class="card-content">
-      <h2>Title</h2>
-      <p>Paragraph</p>
-      <ul>
-        <li>List item</li>
-        <li>List item two</li>
-      </ul>
-    </div>
+    <transition name="slide">
+      <div class="card-content">
+        <h2>{{ slide.title }}</h2>
+        <div v-html="$md.render(slide.body)"></div>
+      </div>
+    </transition>
     <div class="card-images">
-      <img
-        src="https://bulma.io/images/placeholders/1280x960.png"
-        alt="Placeholder image"
-      />
-      <img
-        src="https://bulma.io/images/placeholders/1280x960.png"
-        alt="Placeholder image"
-      />
-      <img
-        src="https://bulma.io/images/placeholders/1280x960.png"
-        alt="Placeholder image"
-      />
-      <img
-        src="https://bulma.io/images/placeholders/1280x960.png"
-        alt="Placeholder image"
-      />
+      <img v-for="image in slide.images" :key="image" :src="image" />
     </div>
-    <a class="previous"
-      ><svg
+    <nuxt-link
+      v-if="slide.pagenumber > 1"
+      ref="previous"
+      :to="`/presentation/${slide.pagenumber - 1}`"
+      class="previous"
+    >
+      <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 17.021 29.798"
         enable-background="new 0 0 17.021 29.798"
       >
         <path
           d="M14.899 29.798l2.122-2.121-12.778-12.778 12.778-12.778-2.122-2.121-14.899 14.899z"
-        ></path></svg
-    ></a>
-    <a class="next"
-      ><svg
+        />
+      </svg>
+    </nuxt-link>
+    <nuxt-link
+      v-if="showNext"
+      ref="next"
+      :to="`/presentation/${slide.pagenumber + 1}`"
+      class="next"
+    >
+      <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 17.021 29.798"
         enable-background="new 0 0 17.021 29.798"
       >
         <path
           d="M2.121 0l-2.121 2.121 12.778 12.778-12.778 12.778 2.121 2.121 14.9-14.899z"
-        ></path></svg
-    ></a>
+        />
+      </svg>
+    </nuxt-link>
   </div>
 </template>
 
 <script>
 export default {
+  async asyncData({ params, payload }) {
+    if (payload) return { slide: payload }
+    else
+      return {
+        slide: await require(`~/assets/content/presentation/${params.slide}.json`)
+      }
+  },
+  computed: {
+    lastSlideNumber() {
+      const pagenumbers = this.$store.state.presentations.map(
+        (x) => x.pagenumber
+      )
+      if (pagenumbers.length) {
+        return Math.max(...pagenumbers)
+      }
+      return 1
+    },
+    showPrevious() {
+      return this.slide.pagenumber > 1
+    },
+    showNext() {
+      return this.slide.pagenumber < this.lastSlideNumber
+    }
+  },
+  mounted() {
+    const self = this
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'ArrowLeft' && this.showPrevious) {
+        self.$refs.previous.$el.click()
+      } else if (e.code === 'ArrowRight' && this.showNext) {
+        self.$refs.next.$el.click()
+      }
+    })
+  },
   head() {
     return {
       link: [

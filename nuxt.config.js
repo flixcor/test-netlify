@@ -3,12 +3,25 @@ export default {
     routes() {
       const fs = require('fs')
       const path = require('path')
-      return fs.readdirSync('./assets/content/blog').map((file) => {
+
+      const blogs = fs.readdirSync('./assets/content/blog').map((file) => {
         return {
           route: `/blog/${path.parse(file).name}`, // Return the slug
           payload: require(`./assets/content/blog/${file}`)
         }
       })
+
+      const presentations = fs
+        .readdirSync('./assets/content/presentation')
+        .map((file) => {
+          const payload = require(`./assets/content/presentation/${file}`)
+          return {
+            route: `/blog/${payload.pagenumber}`, // Return the slug
+            payload
+          }
+        })
+
+      return [...blogs, ...presentations]
     }
   },
   mode: 'universal',
@@ -76,6 +89,11 @@ export default {
         features: {
           customProperties: false
         }
+      }
+    },
+    extend(config, ctx) {
+      if (ctx.isDev) {
+        config.devtool = ctx.isClient ? 'source-map' : 'inline-source-map'
       }
     }
     /*
