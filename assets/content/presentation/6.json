@@ -1,8 +1,9 @@
 {
   "pagenumber": 6,
   "title": "Waarom is dat zo moeilijk",
-  "body": "* Veel begeleiding nodig\n* Weten niet wat ze willen\n* Budgetten zijn raar\n* Projecten hebben lange aanloop\n* Veel bureaucratie\n* Politieke omwentelingen",
+  "body": "* Veel begeleiding nodig\n* Budgetten zijn raar\n* Projecten hebben lange aanloop\n* Veel bureaucratie\n* Privacy, security, ``accessibility``",
   "images": [
-    "/img/bureaucracy.jpg"
+    "/img/bureaucracy.jpg",
+    "/img/budget.gif"
   ]
 }
