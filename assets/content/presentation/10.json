@@ -1,0 +1,10 @@
+{
+  "pagenumber": 10,
+  "title": "Wat doet Flix",
+  "body": "* Analyse\n* Advies\n* Onderzoek\n* ``Backend`` (wat op de server draait)\n* ``Frontend`` (wat je in je browser ziet)\n* Geen ``design``",
+  "images": [
+    "/img/backend.gif",
+    "/img/frontend.gif",
+    "/img/design.png"
+  ]
+}
