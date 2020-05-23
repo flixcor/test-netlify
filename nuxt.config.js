@@ -14,10 +14,9 @@ export default {
       const presentations = fs
         .readdirSync('./assets/content/presentation')
         .map((file) => {
-          const payload = require(`./assets/content/presentation/${file}`)
           return {
-            route: `/blog/${payload.pagenumber}`, // Return the slug
-            payload
+            route: `/presentation/${path.parse(file).name}`, // Return the slug
+            payload: require(`./assets/content/presentation/${file}`)
           }
         })
 
