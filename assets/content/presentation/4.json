@@ -1,8 +1,13 @@
 {
   "pagenumber": 4,
   "title": "Wat doet ICATT",
-  "body": "* Maakt 'full service online oplossingen'",
+  "body": "* ``Full service`` ``online dienstverlener``\n* ``Digitale transformatie``\n* ``Advies``, ``ontwerp`` en ``ontwikkeling``\n* Voor ``overheid``, ``non-profit`` en ``bedrijfsleven``",
   "images": [
-    "/img/thumb_icatt.jpg"
+    "/img/thumb_icatt.jpg",
+    "/img/pvj.png",
+    "/img/museumkaart.svg",
+    "/img/nhg.png",
+    "/img/logo_voor_social.png",
+    "/img/jongenout.png"
   ]
 }
