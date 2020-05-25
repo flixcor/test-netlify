@@ -1,56 +1,98 @@
-type QuestionType = string | number
-type GroupType = object
-type FormElementType = QuestionType | GroupType
+type FormQuestion = string | number | string[] | number[]
+type FormGroup = object | object[]
+type FormElement = FormQuestion | FormGroup
 
-interface IQuestionBuilder<TForm extends object> {
-  isRequired: (form: TForm) => boolean
-  isActive: (form: TForm) => boolean
+interface IFormElementBuilderInternal<TForm extends object> {
+  _isRequired: (form: IFormEvaluator<TForm>) => boolean
+  _isActive: (form: IFormEvaluator<TForm>) => boolean
 }
 
-class FormElementBuilder<TForm extends object, TElement extends FormElementType>
-  implements IQuestionBuilder<TForm> {
+interface IFormElementBuilder<TForm extends object> {
+  isRequired(
+    func: (form: IFormEvaluator<TForm>) => boolean
+  ): IFormElementBuilderInternal<TForm>
+  isActive(
+    func: (form: IFormEvaluator<TForm>) => boolean
+  ): IFormElementBuilderInternal<TForm>
+}
+
+class FormElementBuilder<TForm extends object, TElement extends FormElement>
+  implements IFormElementBuilderInternal<TForm>, IFormElementBuilder<TForm> {
   path: (x: TForm) => TElement
-  isRequired: (form: TForm) => boolean = () => false
-  isActive: (form: TForm) => boolean = () => true
+  _isRequired: (form: IFormEvaluator<TForm>) => boolean = () => false
+  _isActive: (form: IFormEvaluator<TForm>) => boolean = () => true
 
   constructor(path: (x: TForm) => TElement) {
     this.path = path
   }
 
-  public IsRequired(func: (form: TForm) => boolean = () => true) {
-    this.isRequired = func
+  public isRequired(
+    func: (form: IFormEvaluator<TForm>) => boolean = () => true
+  ) {
+    this._isRequired = func
     return this
   }
 
-  public IsActive(func: (form: TForm) => boolean) {
-    this.isActive = func
+  public isActive(func: (form: IFormEvaluator<TForm>) => boolean) {
+    this._isActive = func
     return this
   }
 }
 
-export class FormBuilder<T extends object> {
+interface IFormBuilder<T extends object> {
+  getStatus<Qt extends FormElement>(path: (x: T) => Qt): IFormElementStatus
+
+  question<Qt extends FormQuestion>(
+    path: (x: T) => Qt
+  ): FormElementBuilder<T, Qt>
+
+  group<Gt extends FormGroup>(path: (x: T) => Gt): FormElementBuilder<T, Gt>
+}
+
+interface IFormEvaluator<T extends object> {
+  evaluate<TE extends FormElement>(
+    path: (x: T) => TE,
+    evaluation: (x: TE) => boolean
+  ): boolean
+}
+
+interface IFormElementStatus {
+  active: boolean
+  required: boolean
+}
+
+class FormBuilder<T extends object>
+  implements IFormEvaluator<T>, IFormBuilder<T> {
   private form: T
 
-  private questionBuilders: Record<string, IQuestionBuilder<T>> = {}
+  private questionBuilders: Record<string, IFormElementBuilderInternal<T>> = {}
 
   constructor(form: T) {
     this.form = form
   }
 
-  public question<Qt extends QuestionType>(path: (x: T) => Qt) {
+  evaluate<TE extends FormElement>(
+    path: (x: T) => TE,
+    evaluation: (x: TE) => boolean
+  ): boolean {
+    const pathString = this.getPathString(path)
+    return this.isActiveRecursive(pathString) && evaluation(path(this.form))
+  }
+
+  public question<Qt extends FormQuestion>(path: (x: T) => Qt) {
     return this.getElementBuilder(path)
   }
 
-  public group<Gt extends GroupType>(path: (x: T) => Gt) {
+  public group<Gt extends FormGroup>(path: (x: T) => Gt) {
     return this.getElementBuilder(path)
   }
 
-  public getStatus<Qt extends FormElementType>(path: (x: T) => Qt) {
+  public getStatus<Qt extends FormElement>(path: (x: T) => Qt) {
     const builder = this.getElementBuilder(path)
     const pathStr = this.getPathString(path)
 
     return {
-      required: builder.isRequired(this.form),
+      required: builder._isRequired(this),
       active: this.isActiveRecursive(pathStr)
     }
   }
@@ -66,21 +108,21 @@ export class FormBuilder<T extends object> {
 
     const builder = this.questionBuilders[currentPath]
 
-    if (builder && !builder.isActive(this.form)) {
+    if (builder && !builder._isActive(this)) {
       return false
     }
 
     return this.isActiveRecursive(path, level + 1)
   }
 
-  private getPathString<Et extends FormElementType>(path: (x: T) => Et) {
+  private getPathString<Et extends FormElement>(path: (x: T) => Et) {
     const str = path.toString()
     const skipFirstPart = str.substring(str.indexOf('.') + 1)
     const skipLastPart = skipFirstPart.substring(0, skipFirstPart.indexOf(';'))
     return skipLastPart
   }
 
-  private getElementBuilder<Et extends FormElementType>(path: (x: T) => Et) {
+  private getElementBuilder<Et extends FormElement>(path: (x: T) => Et) {
     const pathStr = this.getPathString(path)
 
     let builder = <FormElementBuilder<T, Et>>this.questionBuilders[pathStr]
@@ -92,4 +134,8 @@ export class FormBuilder<T extends object> {
 
     return builder
   }
+}
+
+export function createFormBuilder<T extends object>(form: T) {
+  return <IFormBuilder<T>>new FormBuilder(form)
 }
