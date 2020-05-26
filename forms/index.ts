@@ -1,6 +1,6 @@
-type FormQuestion = string | number | string[] | number[]
-type FormGroup = object | object[]
-type FormElement = FormQuestion | FormGroup
+export type FormQuestion = string | number | string[] | number[]
+export type FormGroup = object | object[]
+export type FormElement = FormQuestion | FormGroup
 
 interface IFormElementBuilderInternal<TForm extends object> {
   _isRequired: (form: IFormEvaluator<TForm>) => boolean
@@ -39,7 +39,9 @@ class FormElementBuilder<TForm extends object, TElement extends FormElement>
   }
 }
 
-interface IFormBuilder<T extends object> {
+export interface IFormBuilder<T extends object> {
+  setValue<Qt extends FormQuestion>(path: (x: T) => Qt, value: Qt): void
+
   getStatus<Qt extends FormElement>(path: (x: T) => Qt): IFormElementStatus
 
   question<Qt extends FormQuestion>(
@@ -56,9 +58,10 @@ interface IFormEvaluator<T extends object> {
   ): boolean
 }
 
-interface IFormElementStatus {
+export interface IFormElementStatus {
   active: boolean
   required: boolean
+  value: FormElement
 }
 
 class FormBuilder<T extends object>
@@ -93,7 +96,8 @@ class FormBuilder<T extends object>
 
     return {
       required: builder._isRequired(this),
-      active: this.isActiveRecursive(pathStr)
+      active: this.isActiveRecursive(pathStr),
+      value: path(this.form)
     }
   }
 
@@ -116,10 +120,18 @@ class FormBuilder<T extends object>
   }
 
   private getPathString<Et extends FormElement>(path: (x: T) => Et) {
-    const str = path.toString()
-    const skipFirstPart = str.substring(str.indexOf('.') + 1)
-    const skipLastPart = skipFirstPart.substring(0, skipFirstPart.indexOf(';'))
-    return skipLastPart
+    let str = path.toString()
+    str = str.substring(str.indexOf('.') + 1)
+
+    if (str.includes('\n')) {
+      str = str.substring(0, str.indexOf('\n'))
+    }
+
+    if (str.includes(';')) {
+      str = str.substring(0, str.indexOf(';'))
+    }
+
+    return str
   }
 
   private getElementBuilder<Et extends FormElement>(path: (x: T) => Et) {
@@ -133,6 +145,43 @@ class FormBuilder<T extends object>
     }
 
     return builder
+  }
+
+  public setValue<Qt extends FormQuestion>(
+    path: (x: T) => Qt,
+    value: Qt
+  ): void {
+    const setDeepValue = (
+      propertyPath: string[] | string,
+      value: any,
+      obj: any
+    ): boolean => {
+      // this is a super simple parsing, you will want to make this more complex to handle correctly any path
+      // it will split by the dots at first and then simply pass along the array (on next iterations)
+      const properties = Array.isArray(propertyPath)
+        ? propertyPath
+        : propertyPath.split('.')
+
+      // Not yet at the last property so keep digging
+      if (properties.length > 1) {
+        // The property doesn't exists OR is not an object (and so we overwritte it) so we create it
+        if (
+          !obj.hasOwnProperty(properties[0]) ||
+          typeof obj[properties[0]] !== 'object'
+        )
+          obj[properties[0]] = {}
+        // We iterate.
+        return setDeepValue(properties.slice(1), value, obj[properties[0]])
+        // This is the last property - the one where to set the value
+      } else {
+        // We set the value to the last property
+        obj[properties[0]] = value
+        return true // this is the end
+      }
+    }
+    console.log(path.toString())
+    const pathStr = this.getPathString(path)
+    setDeepValue(pathStr, value, this.form)
   }
 }
 
