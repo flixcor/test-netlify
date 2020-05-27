@@ -1,5 +1,5 @@
 <template>
-  <div v-if="status.active" class="field">
+  <div v-show="status.active" class="field">
     <label v-if="label" :for="uuid" class="label">{{ label }}</label>
     <div class="control">
       <input
@@ -60,6 +60,7 @@ export default Vue.extend({
   },
   methods: {
     setValue(newValue: FormQuestion) {
+      console.log('input: ' + newValue)
       const newNumVal = Number(newValue)
       const numVal = Number(this.status.value)
 

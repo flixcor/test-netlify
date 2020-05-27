@@ -62,6 +62,7 @@ export interface IFormElementStatus {
   active: boolean
   required: boolean
   value: FormElement
+  path: string
 }
 
 class FormBuilder<T extends object>
@@ -97,7 +98,8 @@ class FormBuilder<T extends object>
     return {
       required: builder._isRequired(this),
       active: this.isActiveRecursive(pathStr),
-      value: path(this.form)
+      value: path(this.form),
+      path: pathStr
     }
   }
 
@@ -166,7 +168,7 @@ class FormBuilder<T extends object>
       if (properties.length > 1) {
         // The property doesn't exists OR is not an object (and so we overwritte it) so we create it
         if (
-          !obj.hasOwnProperty(properties[0]) ||
+          !Object.prototype.hasOwnProperty.call(obj, properties[0]) ||
           typeof obj[properties[0]] !== 'object'
         )
           obj[properties[0]] = {}
@@ -179,7 +181,6 @@ class FormBuilder<T extends object>
         return true // this is the end
       }
     }
-    console.log(path.toString())
     const pathStr = this.getPathString(path)
     setDeepValue(pathStr, value, this.form)
   }
