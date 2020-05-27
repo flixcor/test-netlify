@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!$nuxt.$route.path.includes('presentation')" class="container">
+    <div v-show="!$nuxt.$route.path.includes('presentation')" class="container">
       <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
           <nuxt-link class="navbar-item" to="/">Home</nuxt-link>
