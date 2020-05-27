@@ -133,6 +133,10 @@ class FormBuilder<T extends object>
       str = str.substring(0, str.indexOf(';'))
     }
 
+    if (str.includes('}')) {
+      str = str.substring(0, str.indexOf('}'))
+    }
+
     return str
   }
 
