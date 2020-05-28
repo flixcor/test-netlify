@@ -2,9 +2,7 @@
   <div class="flex">
     <section>
       <label for="setupBlock" class="label">Setup</label>
-      <vue-code-highlight id="setupBlock" class="language-typescript">{{
-        setup
-      }}</vue-code-highlight>
+      <vue-code-highlight id="setupBlock">{{ setup }}</vue-code-highlight>
     </section>
     <section>
       <question
@@ -41,8 +39,6 @@ import Question from '~/forms/question.vue'
 import { IMyForm, getBuilder, prettyPrint } from '~/forms/example'
 import 'vue-code-highlight/themes/duotone-sea.css'
 import 'vue-code-highlight/themes/window.css'
-import 'prism-es6/components/prism-markup-templating'
-import 'prism-es6/components/prism-typescript'
 
 export default Vue.extend({
   components: {
