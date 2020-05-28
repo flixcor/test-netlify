@@ -1,37 +1,53 @@
 <template>
-  <div>
-    <question
-      :form-builder="formBuilder"
-      :path="question1"
-      label="question1"
-      type="number"
-    />
-    <question
-      :form-builder="formBuilder"
-      :path="question2"
-      label="question2"
-      type="text"
-    />
-    <question
-      :form-builder="formBuilder"
-      :path="question3"
-      label="question3"
-      type="number"
-    />
-    <label for="codeBlock" class="label">Status per question</label>
-    <code id="codeBlock">{{ status }}</code>
+  <div class="flex">
+    <section>
+      <label for="setupBlock" class="label">Setup</label>
+      <vue-code-highlight id="setupBlock" class="language-typescript">{{
+        setup
+      }}</vue-code-highlight>
+    </section>
+    <section>
+      <question
+        :form-builder="formBuilder"
+        :path="question1"
+        label="question1"
+        type="number"
+      />
+      <question
+        :form-builder="formBuilder"
+        :path="question2"
+        label="question2"
+        type="text"
+      />
+      <question
+        :form-builder="formBuilder"
+        :path="question3"
+        label="question3"
+        type="number"
+      />
+    </section>
+    <section>
+      <label for="statusBlock" class="label">Status per question</label>
+      <vue-code-highlight id="statusBlock">{{ status }}</vue-code-highlight>
+    </section>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import { component as VueCodeHighlight } from 'vue-code-highlight'
 import { IFormBuilder } from '~/forms'
 import Question from '~/forms/question.vue'
-import { IMyForm, getBuilder } from '~/forms/example'
+import { IMyForm, getBuilder, prettyPrint } from '~/forms/example'
+import 'vue-code-highlight/themes/duotone-sea.css'
+import 'vue-code-highlight/themes/window.css'
+import 'prism-es6/components/prism-markup-templating'
+import 'prism-es6/components/prism-typescript'
 
 export default Vue.extend({
   components: {
-    Question
+    Question,
+    VueCodeHighlight
   },
   data() {
     const formBuilder: IFormBuilder<IMyForm> = getBuilder()
@@ -39,11 +55,14 @@ export default Vue.extend({
     const question2: (x: IMyForm) => string = (x) => x.question2
     const question3: (x: IMyForm) => number = (x) => x.group1.question3
 
+    const setup = prettyPrint()
+
     return {
       formBuilder,
       question1,
       question2,
-      question3
+      question3,
+      setup
     }
   },
   computed: {
@@ -61,10 +80,28 @@ export default Vue.extend({
   }
 })
 </script>
-
 <style>
-code {
-  display: block;
-  white-space: pre-wrap;
+code .number {
+  align-items: inherit;
+  background-color: inherit;
+  border-radius: inherit;
+  display: inherit;
+  font-size: inherit;
+  height: inherit;
+  justify-content: inherit;
+  margin-right: inherit;
+  min-width: inherit;
+  padding: inherit;
+  text-align: inherit;
+  vertical-align: inherit;
+}
+
+.flex {
+  display: flex;
+  margin-top: 50px;
+}
+
+section:not(:first-child) {
+  margin-left: 50px;
 }
 </style>

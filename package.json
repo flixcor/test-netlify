@@ -25,7 +25,8 @@
     "@nuxtjs/bulma": "^1.2.1",
     "@nuxtjs/markdownit": "^1.2.9",
     "@nuxtjs/pwa": "^3.0.0-0",
-    "nuxt": "^2.0.0"
+    "nuxt": "^2.0.0",
+    "vue-code-highlight": "^0.7.4"
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^0.6.0",
