@@ -10,19 +10,19 @@
       <question
         :form-builder="formBuilder"
         :path="question1"
-        label="question1"
+        label="Question 1"
         type="number"
       />
       <question
         :form-builder="formBuilder"
         :path="question2"
-        label="question2"
+        label="Question 2"
         type="text"
       />
       <question
         :form-builder="formBuilder"
         :path="question3"
-        label="question3"
+        label="Question 3"
         type="number"
       />
     </section>
@@ -99,9 +99,13 @@ code .number {
 .flex {
   display: flex;
   margin-top: 50px;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
-section:not(:first-child) {
-  margin-left: 50px;
+@media only screen and (min-width: 1644px) {
+  .container {
+    max-width: 1380px;
+  }
 }
 </style>
