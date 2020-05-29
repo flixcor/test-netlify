@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-show="!$nuxt.$route.path.includes('presentation')" class="container">
+    <div v-show="showNav()" class="container">
       <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
           <nuxt-link class="navbar-item" to="/">Home</nuxt-link>
@@ -21,6 +21,19 @@
     </main>
   </div>
 </template>
+
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
+  methods: {
+    showNav() {
+      const path = this.$nuxt.$route.path
+      const excludedRoutes = ['presentation', 'forms']
+      return !excludedRoutes.some((r) => path.includes(r))
+    }
+  }
+})
+</script>
 
 <style>
 html {
