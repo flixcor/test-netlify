@@ -19,7 +19,7 @@ export function getBuilder() {
     }
   }
 
-  const builder = createFormBuilder(myForm)
+  const builder = createFormBuilder<IMyForm>(myForm)
 
   builder.question((x) => x.question1).isRequired()
 

@@ -1,13 +1,14 @@
 export type FormQuestion = string | number | string[] | number[]
-export type FormGroup = object | object[]
+export type FormGroup = Record<any, any>
 export type FormElement = FormQuestion | FormGroup
+export type Form = Record<any, any>
 
-interface IFormElementBuilderInternal<TForm extends object> {
+interface IFormElementBuilderInternal<TForm extends Form> {
   _isRequired: (form: IFormEvaluator<TForm>) => boolean
   _isActive: (form: IFormEvaluator<TForm>) => boolean
 }
 
-interface IFormElementBuilder<TForm extends object> {
+interface IFormElementBuilder<TForm extends Form> {
   isRequired(
     func: (form: IFormEvaluator<TForm>) => boolean
   ): IFormElementBuilderInternal<TForm>
@@ -16,7 +17,7 @@ interface IFormElementBuilder<TForm extends object> {
   ): IFormElementBuilderInternal<TForm>
 }
 
-class FormElementBuilder<TForm extends object, TElement extends FormElement>
+class FormElementBuilder<TForm extends Form, TElement extends FormElement>
   implements IFormElementBuilderInternal<TForm>, IFormElementBuilder<TForm> {
   path: (x: TForm) => TElement
   _isRequired: (form: IFormEvaluator<TForm>) => boolean = () => false
@@ -39,7 +40,7 @@ class FormElementBuilder<TForm extends object, TElement extends FormElement>
   }
 }
 
-export interface IFormBuilder<T extends object> {
+export interface IFormBuilder<T extends Form> {
   setValue<Qt extends FormQuestion>(path: (x: T) => Qt, value: Qt): void
 
   getStatus<Qt extends FormElement>(path: (x: T) => Qt): IFormElementStatus
@@ -51,7 +52,7 @@ export interface IFormBuilder<T extends object> {
   group<Gt extends FormGroup>(path: (x: T) => Gt): FormElementBuilder<T, Gt>
 }
 
-interface IFormEvaluator<T extends object> {
+interface IFormEvaluator<T extends Form> {
   evaluate<TE extends FormElement>(
     path: (x: T) => TE,
     evaluation: (x: TE) => boolean
@@ -65,7 +66,7 @@ export interface IFormElementStatus {
   path: string
 }
 
-class FormBuilder<T extends object>
+class FormBuilder<T extends Form>
   implements IFormEvaluator<T>, IFormBuilder<T> {
   private form: T
 
@@ -103,7 +104,7 @@ class FormBuilder<T extends object>
     }
   }
 
-  private isActiveRecursive(path: string, level: number = 1): boolean {
+  private isActiveRecursive(path: string, level = 1): boolean {
     const split = path.split('.')
 
     if (level > split.length) {
@@ -159,7 +160,7 @@ class FormBuilder<T extends object>
   ): void {
     const setDeepValue = (
       propertyPath: string[] | string,
-      value: any,
+      value: Qt,
       obj: any
     ): boolean => {
       // this is a super simple parsing, you will want to make this more complex to handle correctly any path
@@ -190,6 +191,6 @@ class FormBuilder<T extends object>
   }
 }
 
-export function createFormBuilder<T extends object>(form: T) {
+export function createFormBuilder<T extends Form>(form: T): IFormBuilder<T> {
   return <IFormBuilder<T>>new FormBuilder(form)
 }
