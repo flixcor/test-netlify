@@ -1,10 +1,14 @@
 <template>
   <div class="flex">
     <section>
-      <label for="setupBlock" class="label">Setup</label>
-      <vue-code-highlight id="setupBlock">{{ setup }}</vue-code-highlight>
+      <h2 class="title">Setup</h2>
+      <pre v-highlightjs="setup">
+        <code class="typescript">
+        </code>
+      </pre>
     </section>
     <section>
+      <h2 class="title">Questions</h2>
       <question
         :form-builder="formBuilder"
         :path="question1"
@@ -25,25 +29,25 @@
       />
     </section>
     <section>
-      <label for="statusBlock" class="label">Status per question</label>
-      <vue-code-highlight id="statusBlock">{{ status }}</vue-code-highlight>
+      <h2 class="title">Status</h2>
+      <pre v-highlightjs="status">
+        <code class="javascript">
+        </code>
+      </pre>
     </section>
   </div>
 </template>
 
 <script lang="ts">
+import 'highlight.js/styles/dracula.css'
 import Vue from 'vue'
-import { component as VueCodeHighlight } from 'vue-code-highlight'
 import { IFormBuilder } from '~/forms'
 import Question from '~/forms/question.vue'
 import { IMyForm, getBuilder, prettyPrint } from '~/forms/example'
-import 'vue-code-highlight/themes/duotone-sea.css'
-import 'vue-code-highlight/themes/window.css'
 
 export default Vue.extend({
   components: {
-    Question,
-    VueCodeHighlight
+    Question
   },
   data() {
     const formBuilder: IFormBuilder<IMyForm> = getBuilder()
@@ -70,33 +74,28 @@ export default Vue.extend({
           question3: this.formBuilder.getStatus(this.question3)
         },
         null,
-        4
+        2
       )
     }
   }
 })
 </script>
 <style>
-code .number {
-  align-items: inherit;
-  background-color: inherit;
-  border-radius: inherit;
-  display: inherit;
-  font-size: inherit;
-  height: inherit;
-  justify-content: inherit;
-  margin-right: inherit;
-  min-width: inherit;
-  padding: inherit;
-  text-align: inherit;
-  vertical-align: inherit;
-}
-
 .flex {
   display: flex;
   margin-top: 50px;
   flex-wrap: wrap;
   justify-content: space-between;
+}
+
+pre {
+  -webkit-overflow-scrolling: inherit;
+  background-color: inherit;
+  color: inherit;
+  font-size: inherit;
+  overflow-x: inherit;
+  padding: inherit;
+  word-wrap: inherit;
 }
 
 @media only screen and (min-width: 1644px) {

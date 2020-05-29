@@ -60,7 +60,6 @@ export default Vue.extend({
   },
   methods: {
     setValue(newValue: FormQuestion) {
-      console.log('input: ' + newValue)
       const newNumVal = Number(newValue)
       const numVal = Number(this.status.value)
 
