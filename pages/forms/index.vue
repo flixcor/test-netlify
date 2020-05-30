@@ -41,7 +41,7 @@
 <script lang="ts">
 import 'highlight.js/styles/dracula.css'
 import Vue from 'vue'
-import { IFormBuilder } from '~/forms'
+import { IFormBuilder } from 'fluent-forms'
 import Question from '~/forms/question.vue'
 import { IMyForm, getBuilder, prettyPrint } from '~/forms/example'
 

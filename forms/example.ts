@@ -1,4 +1,4 @@
-import { createFormBuilder } from './index'
+import { createFormBuilder } from 'fluent-forms'
 
 export interface IMyForm {
   question1: number
@@ -53,7 +53,7 @@ export function getBuilder() {
 
 export function prettyPrint() {
   return `
-  import { createFormBuilder } from './index'
+  import { createFormBuilder } from 'fluent-forms'
 
   const myForm = {
     question1: 5,

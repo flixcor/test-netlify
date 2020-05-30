@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from 'vue'
-import { IFormBuilder, FormQuestion, IFormElementStatus } from './index'
+import { IFormBuilder, FormQuestion, IFormElementStatus } from 'fluent-forms'
 
 function createUUID() {
   let dt = new Date().getTime()
