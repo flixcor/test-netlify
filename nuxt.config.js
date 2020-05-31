@@ -47,7 +47,9 @@ export default {
   /*
    ** Global CSS
    */
-  css: [],
+  css: [
+    { src: '~/node_modules/highlight.js/styles/a11y-dark.css', lang: 'css' }
+  ],
   /*
    ** Plugins to load before mounting the App
    */

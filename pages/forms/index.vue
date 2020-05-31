@@ -2,8 +2,8 @@
   <div class="flex">
     <section>
       <h2 class="title">Setup</h2>
-      <pre v-highlightjs="setup">
-        <code class="typescript">
+      <pre>
+        <code class="typescript hljs" v-html="setup">
         </code>
       </pre>
     </section>
@@ -30,8 +30,8 @@
     </section>
     <section>
       <h2 class="title">Status</h2>
-      <pre v-highlightjs="status">
-        <code class="javascript">
+      <pre>
+        <code class="javascript hljs" v-html="status">
         </code>
       </pre>
     </section>
@@ -39,11 +39,19 @@
 </template>
 
 <script lang="ts">
-import 'highlight.js/styles/a11y-dark.css'
 import Vue from 'vue'
 import { IFormBuilder } from 'fluent-forms'
 import Question from '~/forms/question.vue'
 import { IMyForm, getBuilder, prettyPrint } from '~/forms/example'
+
+const hljs = require('highlight.js/lib/core') // require only the core library
+// separately require languages
+hljs.registerLanguage(
+  'javascript',
+  require('highlight.js/lib/languages/javascript')
+)
+
+const highlight = (x: string) => hljs.highlight('javascript', x).value
 
 export default Vue.extend({
   components: {
@@ -55,26 +63,26 @@ export default Vue.extend({
     const question2: (x: IMyForm) => string = (x) => x.question2
     const question3: (x: IMyForm) => number = (x) => x.group1.question3
 
-    const setup = prettyPrint()
-
     return {
       formBuilder,
       question1,
       question2,
       question3,
-      setup
+      setup: highlight(prettyPrint())
     }
   },
   computed: {
     status(): string {
-      return JSON.stringify(
-        {
-          question1: this.formBuilder.getStatus(this.question1),
-          question2: this.formBuilder.getStatus(this.question2),
-          question3: this.formBuilder.getStatus(this.question3)
-        },
-        null,
-        2
+      return highlight(
+        JSON.stringify(
+          {
+            question1: this.formBuilder.getStatus(this.question1),
+            question2: this.formBuilder.getStatus(this.question2),
+            question3: this.formBuilder.getStatus(this.question3)
+          },
+          null,
+          2
+        )
       )
     }
   }
