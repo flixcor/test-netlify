@@ -17,18 +17,6 @@
 import Vue, { PropOptions } from 'vue'
 import { IFormBuilder, FormQuestion, IFormElementStatus } from 'fluent-forms'
 
-function createUUID() {
-  let dt = new Date().getTime()
-  const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(
-    c
-  ) {
-    const r = (dt + Math.random() * 16) % 16 | 0
-    dt = Math.floor(dt / 16)
-    return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16)
-  })
-  return uuid
-}
-
 export default Vue.extend({
   props: {
     formBuilder: {
@@ -51,12 +39,15 @@ export default Vue.extend({
     }
   },
   data() {
-    return { uuid: createUUID() }
+    return { uuid: '' }
   },
   computed: {
     status(): IFormElementStatus {
       return this.formBuilder.getStatus(this.path)
     }
+  },
+  mounted() {
+    this.uuid = (this as any)._uid
   },
   methods: {
     setValue(newValue: FormQuestion) {
