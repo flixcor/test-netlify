@@ -51,10 +51,9 @@ export default Vue.extend({
   },
   methods: {
     setValue(newValue: FormQuestion) {
-      const newNumVal = Number(newValue)
-      const numVal = Number(this.status.value)
+      if (typeof this.status.value === 'number') {
+        const newNumVal = Number(newValue)
 
-      if (!isNaN(numVal)) {
         if (isNaN(newNumVal)) return
         newValue = newNumVal
       }
