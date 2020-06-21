@@ -18,15 +18,9 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from 'vue'
-import {
-  IFormBuilder,
-  FormQuestion,
-  IFormElementStatus,
-  FormElement,
-  Form
-} from 'fluent-forms'
+import { IFormBuilder, IFormElementStatus, Form } from 'fluent-forms'
 
-type Multiple = (string|number)[]
+type Multiple = (string | number)[]
 
 export default Vue.extend({
   props: {
@@ -51,20 +45,20 @@ export default Vue.extend({
   data() {
     return {
       uuid: '',
-      currentValue: (<Multiple>this.formBuilder.getStatus(this.path).value)
-    }
-  },
-  watch: {
-    currentValue: {
-      deep: true,
-      handler (newVal) {
-        this.formBuilder.setValue(this.path, newVal)
-      }
+      currentValue: this.formBuilder.getStatus(this.path).value as Multiple
     }
   },
   computed: {
     status(): IFormElementStatus {
       return this.formBuilder.getStatus(this.path)
+    }
+  },
+  watch: {
+    currentValue: {
+      deep: true,
+      handler(newVal) {
+        this.formBuilder.setValue(this.path, newVal)
+      }
     }
   },
   mounted() {
