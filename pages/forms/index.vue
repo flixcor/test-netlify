@@ -60,7 +60,8 @@ export default Vue.extend({
     const formBuilder: IFormBuilder<IMyForm> = getBuilder()
     const question1: (x: IMyForm) => number = (x) => x.question1
     const question2: (x: IMyForm) => string = (x) => x.question2
-    const question3: (x: IMyForm) => number[] = (x) => x.group1.question3
+    const question3: (x: IMyForm) => (number | string)[] = (x) =>
+      x.group1.question3
     const setup: string = highlight(prettyPrint())
 
     return {

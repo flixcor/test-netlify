@@ -57,7 +57,7 @@ export default Vue.extend({
     currentValue: {
       deep: true,
       handler (newVal) {
-        (<any>this).setValue(newVal)
+        this.formBuilder.setValue(this.path, newVal)
       }
     }
   },
@@ -68,13 +68,6 @@ export default Vue.extend({
   },
   mounted() {
     this.uuid = (this as any)._uid
-  },
-  methods: {
-    setValue(newValue: Multiple) {
-      const path = <(x: any) => FormQuestion>this.path
-      const val = <FormQuestion> newValue
-      this.formBuilder.setValue(path, val)
-    }
   }
 })
 </script>

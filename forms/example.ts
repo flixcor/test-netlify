@@ -7,7 +7,7 @@ export interface IMyForm {
 }
 
 interface IGroup1 {
-  question3: number[]
+  question3: (number | string)[]
 }
 
 export function getBuilder() {

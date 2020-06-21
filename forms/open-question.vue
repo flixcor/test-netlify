@@ -16,7 +16,8 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from 'vue'
-import { IFormBuilder, FormQuestion, IFormElementStatus } from 'fluent-forms'
+import { IFormBuilder, IFormElementStatus } from 'fluent-forms'
+type Single = number | string
 
 export default Vue.extend({
   props: {
@@ -27,7 +28,7 @@ export default Vue.extend({
     path: {
       type: Function,
       required: true
-    } as PropOptions<(x: any) => FormQuestion>,
+    } as PropOptions<(x: any) => Single>,
     label: {
       type: String,
       required: false,
@@ -46,7 +47,7 @@ export default Vue.extend({
     this.uuid = (this as any)._uid
   },
   methods: {
-    setValue(newValue: FormQuestion) {
+    setValue(newValue: Single) {
       if (typeof this.status.value === 'number') {
         const newNumVal = Number(newValue)
 
