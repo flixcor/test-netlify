@@ -7,15 +7,15 @@ export interface IMyForm {
 }
 
 interface IGroup1 {
-  question3: number
+  question3: number[]
 }
 
 export function getBuilder() {
-  const myForm = {
+  const myForm: IMyForm = {
     question1: 5,
     question2: 'answer',
     group1: {
-      question3: 22.5
+      question3: [22.5]
     }
   }
 
@@ -59,7 +59,7 @@ export function prettyPrint() {
     question1: 5,
     question2: 'answer',
     group1: {
-      question3: 22.5
+      question3: [22.5]
     }
   }
 

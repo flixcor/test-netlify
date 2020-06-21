@@ -1,11 +1,12 @@
 <template>
-  <div v-show="status.active" class="field">
+  <div v-if="status.active" class="field">
     <label v-if="label" :for="uuid" class="label">{{ label }}</label>
     <div class="control">
       <input
         :id="uuid"
         :value="status.value"
-        :type="type"
+        :type="typeof status.value === 'number' ? 'number' : 'text'"
+        :data-qa="status.path"
         class="input"
         @input="setValue($event.target.value)"
       />
@@ -31,11 +32,6 @@ export default Vue.extend({
       type: String,
       required: false,
       default: null
-    },
-    type: {
-      type: String,
-      required: false,
-      default: 'text'
     }
   },
   data() {

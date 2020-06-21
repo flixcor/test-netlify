@@ -9,23 +9,21 @@
     </section>
     <section>
       <h2 class="title">Questions</h2>
-      <question
+      <open-question
         :form-builder="formBuilder"
         :path="question1"
         label="Question 1"
-        type="number"
       />
-      <question
+      <open-question
         :form-builder="formBuilder"
         :path="question2"
         label="Question 2"
-        type="text"
       />
-      <question
+      <multiple-choice
         :form-builder="formBuilder"
         :path="question3"
         label="Question 3"
-        type="number"
+        :options="[20, 'Thirty', 22.5]"
       />
     </section>
     <section>
@@ -41,7 +39,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { IFormBuilder } from 'fluent-forms'
-import Question from '~/forms/question.vue'
+import { OpenQuestion, MultipleChoice } from '~/forms'
 import { IMyForm, getBuilder, prettyPrint } from '~/forms/example'
 
 const hljs = require('highlight.js/lib/core') // require only the core library
@@ -55,20 +53,22 @@ const highlight = (x: string) => hljs.highlight('javascript', x).value
 
 export default Vue.extend({
   components: {
-    Question
+    OpenQuestion,
+    MultipleChoice
   },
   data() {
     const formBuilder: IFormBuilder<IMyForm> = getBuilder()
     const question1: (x: IMyForm) => number = (x) => x.question1
     const question2: (x: IMyForm) => string = (x) => x.question2
-    const question3: (x: IMyForm) => number = (x) => x.group1.question3
+    const question3: (x: IMyForm) => number[] = (x) => x.group1.question3
+    const setup: string = highlight(prettyPrint())
 
     return {
       formBuilder,
       question1,
       question2,
       question3,
-      setup: highlight(prettyPrint())
+      setup
     }
   },
   computed: {
@@ -109,11 +109,11 @@ h2 {
   margin-bottom: 1rem;
 }
 
-label:not(:last-child) {
+.label:not(:last-child) {
   margin-bottom: 0.5em;
 }
 
-label {
+.label {
   color: #363636;
   display: block;
   font-size: 1rem;
@@ -128,7 +128,8 @@ label {
   text-align: left;
 }
 
-input {
+input[type='text'],
+input[type='number'] {
   box-shadow: inset 0 0.0625em 0.125em rgba(10, 10, 10, 0.05);
   max-width: 100%;
   width: 100%;
@@ -158,6 +159,12 @@ input:active {
   border-color: #3273dc;
   box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
   outline: none;
+}
+
+.checkbox,
+.radio {
+  cursor: pointer;
+  display: block;
 }
 
 body,
