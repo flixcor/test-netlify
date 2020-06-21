@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from 'vue'
-import { IFormBuilder, IFormElementStatus } from 'fluent-forms'
+import { IFormBuilder, IFormElementStatus, Form } from 'fluent-forms'
 type Single = number | string
 
 export default Vue.extend({
@@ -24,11 +24,11 @@ export default Vue.extend({
     formBuilder: {
       type: Object,
       required: true
-    } as PropOptions<IFormBuilder<any>>,
+    } as PropOptions<IFormBuilder<Form>>,
     path: {
       type: Function,
       required: true
-    } as PropOptions<(x: any) => Single>,
+    } as PropOptions<(x: Form) => Single>,
     label: {
       type: String,
       required: false,

@@ -22,7 +22,8 @@ import {
   IFormBuilder,
   FormQuestion,
   IFormElementStatus,
-  FormElement
+  FormElement,
+  Form
 } from 'fluent-forms'
 
 type Multiple = (string|number)[]
@@ -32,11 +33,11 @@ export default Vue.extend({
     formBuilder: {
       type: Object,
       required: true
-    } as PropOptions<IFormBuilder<any>>,
+    } as PropOptions<IFormBuilder<Form>>,
     path: {
       type: Function,
       required: true
-    } as PropOptions<(x: any) => Multiple>,
+    } as PropOptions<(x: Form) => Multiple>,
     label: {
       type: String,
       required: false,
