@@ -1,12 +1,12 @@
-import { createFormBuilder } from 'fluent-forms'
+import { createFormBuilder, Form, FormGroup } from 'fluent-forms'
 
-export interface IMyForm {
+export interface IMyForm extends Form {
   question1: number
   question2: string
   group1: IGroup1
 }
 
-interface IGroup1 {
+interface IGroup1 extends FormGroup {
   question3: (number | string)[]
 }
 
@@ -19,7 +19,7 @@ export function getBuilder() {
     }
   }
 
-  const builder = createFormBuilder<IMyForm>(myForm)
+  const builder = createFormBuilder(myForm)
 
   builder.question((x) => x.question1).isRequired()
 
