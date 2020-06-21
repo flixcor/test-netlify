@@ -128,8 +128,7 @@ h2 {
   text-align: left;
 }
 
-input[type='text'],
-input[type='number'] {
+input:not([type='checkbox']) {
   box-shadow: inset 0 0.0625em 0.125em rgba(10, 10, 10, 0.05);
   max-width: 100%;
   width: 100%;
