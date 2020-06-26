@@ -49,14 +49,14 @@ export default Vue.extend({
     }
   },
   computed: {
-    status(): IFormElementStatus {
+    status(): IFormElementStatus<Multiple> {
       return this.formBuilder.getStatus(this.path)
     }
   },
   watch: {
     currentValue: {
       deep: true,
-      handler(newVal) {
+      handler(newVal: Multiple) {
         this.formBuilder.setValue(this.path, newVal)
       }
     }

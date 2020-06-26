@@ -39,7 +39,7 @@ export default Vue.extend({
     return { uuid: '' }
   },
   computed: {
-    status(): IFormElementStatus {
+    status(): IFormElementStatus<Single> {
       return this.formBuilder.getStatus(this.path)
     }
   },
