@@ -1,6 +1,12 @@
 <template>
   <div v-if="status.active" class="field">
-    <label v-if="label" :for="uuid" class="label">{{ label }}</label>
+    <label
+      v-if="label"
+      :for="uuid"
+      class="label"
+      :aria-required="status.required"
+      >{{ label }}</label
+    >
     <div class="control">
       <label v-for="(option, index) in options" :key="index" class="checkbox">
         <input

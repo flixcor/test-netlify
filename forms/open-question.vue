@@ -1,13 +1,20 @@
 <template>
   <div v-if="status.active" class="field">
-    <label v-if="label" :for="uuid" class="label">{{ label }}</label>
+    <label
+      v-if="label"
+      :for="uuid"
+      class="label"
+      :aria-required="status.required"
+      >{{ label }}</label
+    >
     <div class="control">
       <input
         :id="uuid"
         :value="status.value"
         :type="typeof status.value === 'number' ? 'number' : 'text'"
-        :data-qa="status.path"
+        :data-path="status.path"
         class="input"
+        :aria-required="status.required"
         @input="setValue($event.target.value)"
       />
     </div>

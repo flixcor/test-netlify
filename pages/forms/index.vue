@@ -127,6 +127,11 @@ h2 {
   font-weight: 700;
 }
 
+.label[aria-required='true']:after {
+  content: ' *';
+  color: red;
+}
+
 .control {
   box-sizing: border-box;
   clear: both;
