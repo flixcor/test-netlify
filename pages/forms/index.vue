@@ -79,9 +79,9 @@ export default Vue.extend({
     status(): string {
       const groupBuilder = this.formBuilder.recurringGroup(this.recurring)
       const count = groupBuilder.count()
-      const recurringGroup = [...Array(count).keys()].map((x) =>
-        groupBuilder.getStatus(x, (r) => r.question4)
-      )
+      const recurringGroup = [...Array(count).keys()].map((x) => ({
+        question4: groupBuilder.getStatus(x, (r) => r.question4)
+      }))
 
       const obj = {
         question1: this.formBuilder.getStatus(this.question1),
