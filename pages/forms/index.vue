@@ -17,7 +17,7 @@
         :options="[20, 'Thirty', 22.5]"
       />
       <fieldset v-for="(group, index) in statusObj.recurringGroup" :key="index">
-        <legend>Instance {{ index + 1 }} of recurring roup</legend>
+        <legend>Instance {{ index + 1 }} of recurring group</legend>
         <open-question :status="group.question4" label="Question 4" />
       </fieldset>
     </section>
