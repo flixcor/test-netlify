@@ -1,12 +1,8 @@
 <template>
   <div v-if="status.active" class="field">
-    <label
-      v-if="label"
-      :for="uuid"
-      class="label"
-      :aria-required="status.required"
-      >{{ label }}</label
-    >
+    <label v-if="label" :for="uuid" class="label" :required="status.required">{{
+      label
+    }}</label>
     <div class="control">
       <input
         :id="uuid"
@@ -14,7 +10,7 @@
         :type="typeof status.value === 'number' ? 'number' : 'text'"
         :data-path="status.path"
         class="input"
-        :aria-required="status.required"
+        :required="status.required"
         @input="setValue($event.target.value)"
       />
     </div>
@@ -23,19 +19,15 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from 'vue'
-import { IFormBuilder, IFormElementStatus, Form } from 'fluent-forms'
+import { IFormElementStatus } from 'fluent-forms'
 type Single = number | string
 
 export default Vue.extend({
   props: {
-    formBuilder: {
+    status: {
       type: Object,
       required: true
-    } as PropOptions<IFormBuilder<Form>>,
-    path: {
-      type: Function,
-      required: true
-    } as PropOptions<(x: Form) => Single>,
+    } as PropOptions<IFormElementStatus<Single>>,
     label: {
       type: String,
       required: false,
@@ -44,11 +36,6 @@ export default Vue.extend({
   },
   data() {
     return { uuid: '' }
-  },
-  computed: {
-    status(): IFormElementStatus<Single> {
-      return this.formBuilder.getStatus(this.path)
-    }
   },
   mounted() {
     this.uuid = (this as any)._uid
@@ -62,7 +49,7 @@ export default Vue.extend({
         newValue = newNumVal
       }
 
-      this.formBuilder.setValue(this.path, newValue)
+      this.status.set(newValue)
     }
   }
 })

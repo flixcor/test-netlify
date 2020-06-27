@@ -11,7 +11,7 @@ interface IGroup1 extends FormGroup {
   question3: (number | string)[]
 }
 
-interface IGroup2 extends FormGroup {
+export interface IGroup2 extends FormGroup {
   question4: string
 }
 
@@ -63,7 +63,9 @@ export function getBuilder(): IFormBuilder<IMyForm> {
 
   const recurringGroupBuilder = builder.recurringGroup((x) => x.recurringGroup)
 
-  recurringGroupBuilder.question((y) => y.question4).isRequired((i) => i === 0)
+  recurringGroupBuilder
+    .question((y) => y.question4)
+    .isRequired((index) => index === 0)
 
   return builder
 }
@@ -80,7 +82,10 @@ export function prettyPrint() {
     },
     recurringGroup: [
       {
-        question4: 'example'
+        question4: 'example 1'
+      },
+      {
+        question4: 'example 2'
       }
     ]
   }
@@ -116,6 +121,8 @@ export function prettyPrint() {
 
   const recurringGroupBuilder = builder.recurringGroup((x) => x.recurringGroup)
 
-  recurringGroupBuilder.question((y) => y.question4).isRequired((i) => i === 0)
+  recurringGroupBuilder
+    .question((y) => y.question4)
+    .isRequired((index) => index === 0)
   `
 }

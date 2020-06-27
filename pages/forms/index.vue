@@ -9,22 +9,17 @@
     </section>
     <section>
       <h2 class="title">Questions</h2>
-      <open-question
-        :form-builder="formBuilder"
-        :path="question1"
-        label="Question 1"
-      />
-      <open-question
-        :form-builder="formBuilder"
-        :path="question2"
-        label="Question 2"
-      />
+      <open-question :status="statusObj.question1" label="Question 1" />
+      <open-question :status="statusObj.question2" label="Question 2" />
       <multiple-choice
-        :form-builder="formBuilder"
-        :path="question3"
+        :status="statusObj.question3"
         label="Question 3"
         :options="[20, 'Thirty', 22.5]"
       />
+      <fieldset v-for="(group, index) in statusObj.recurringGroup" :key="index">
+        <legend>Instance {{ index + 1 }} of recurring roup</legend>
+        <open-question :status="group.question4" label="Question 4" />
+      </fieldset>
     </section>
     <section>
       <h2 class="title">Status</h2>
@@ -38,7 +33,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { IFormBuilder, FormGroup } from 'fluent-forms'
+import { IFormBuilder } from 'fluent-forms'
 import { OpenQuestion, MultipleChoice } from '~/forms'
 import { IMyForm, getBuilder, prettyPrint } from '~/forms/example'
 
@@ -57,40 +52,31 @@ export default Vue.extend({
     MultipleChoice
   },
   data() {
-    const formBuilder: IFormBuilder<IMyForm> = getBuilder()
-    const question1: (x: IMyForm) => number = (x) => x.question1
-    const question2: (x: IMyForm) => string = (x) => x.question2
-    const question3: (x: IMyForm) => (number | string)[] = (x) =>
-      x.group1.question3
-    const recurring: (x: IMyForm) => FormGroup[] = (x) => x.recurringGroup
-
     const setup: string = highlight(prettyPrint())
-
+    const formBuilder: IFormBuilder<IMyForm> = getBuilder()
     return {
-      formBuilder,
-      question1,
-      question2,
-      question3,
-      recurring,
-      setup
+      setup,
+      formBuilder
     }
   },
   computed: {
-    status(): string {
-      const groupBuilder = this.formBuilder.recurringGroup(this.recurring)
+    statusObj(): Record<any, any> {
+      const formBuilder = this.formBuilder
+      const groupBuilder = formBuilder.recurringGroup((x) => x.recurringGroup)
       const count = groupBuilder.count()
-      const recurringGroup = [...Array(count).keys()].map((x) => ({
-        question4: groupBuilder.getStatus(x, (r) => r.question4)
+      const recurringGroup = [...Array(count).keys()].map((i) => ({
+        question4: groupBuilder.getStatus(i, (x) => x.question4)
       }))
 
-      const obj = {
-        question1: this.formBuilder.getStatus(this.question1),
-        question2: this.formBuilder.getStatus(this.question2),
-        question3: this.formBuilder.getStatus(this.question3),
+      return {
+        question1: formBuilder.getStatus((x) => x.question1),
+        question2: formBuilder.getStatus((x) => x.question2),
+        question3: formBuilder.getStatus((x) => x.group1.question3),
         recurringGroup
       }
-
-      return highlight(JSON.stringify(obj, null, 2))
+    },
+    status(): string {
+      return highlight(JSON.stringify(this.statusObj, null, 2))
     }
   }
 })
@@ -127,7 +113,7 @@ h2 {
   font-weight: 700;
 }
 
-.label[aria-required='true']:after {
+.label[required]:after {
   content: ' *';
   color: red;
 }

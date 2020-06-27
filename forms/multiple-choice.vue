@@ -1,12 +1,8 @@
 <template>
   <div v-if="status.active" class="field">
-    <label
-      v-if="label"
-      :for="uuid"
-      class="label"
-      :aria-required="status.required"
-      >{{ label }}</label
-    >
+    <label v-if="label" :for="uuid" class="label" :required="status.required">{{
+      label
+    }}</label>
     <div class="control">
       <label v-for="(option, index) in options" :key="index" class="checkbox">
         <input
@@ -24,20 +20,16 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from 'vue'
-import { IFormBuilder, IFormElementStatus, Form } from 'fluent-forms'
+import { IFormElementStatus } from 'fluent-forms'
 
 type Multiple = (string | number)[]
 
 export default Vue.extend({
   props: {
-    formBuilder: {
+    status: {
       type: Object,
       required: true
-    } as PropOptions<IFormBuilder<Form>>,
-    path: {
-      type: Function,
-      required: true
-    } as PropOptions<(x: Form) => Multiple>,
+    } as PropOptions<IFormElementStatus<Multiple>>,
     label: {
       type: String,
       required: false,
@@ -51,19 +43,14 @@ export default Vue.extend({
   data() {
     return {
       uuid: '',
-      currentValue: this.formBuilder.getStatus(this.path).value as Multiple
-    }
-  },
-  computed: {
-    status(): IFormElementStatus<Multiple> {
-      return this.formBuilder.getStatus(this.path)
+      currentValue: this.status.value
     }
   },
   watch: {
     currentValue: {
       deep: true,
       handler(newVal: Multiple) {
-        this.formBuilder.setValue(this.path, newVal)
+        this.status.set(newVal)
       }
     }
   },
