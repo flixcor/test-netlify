@@ -77,6 +77,9 @@ export default Vue.extend({
     },
     status(): string {
       return highlight(JSON.stringify(this.statusObj, null, 2))
+    },
+    state(): unknown {
+      return this.formBuilder.getState()
     }
   }
 })

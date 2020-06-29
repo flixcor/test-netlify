@@ -20,7 +20,7 @@ export function getBuilder(): IFormBuilder<IMyForm> {
     question1: 5,
     question2: 'answer',
     group1: {
-      question3: [22.5]
+      question3: []
     },
     recurringGroup: [
       {
@@ -35,6 +35,7 @@ export function getBuilder(): IFormBuilder<IMyForm> {
   const builder = createFormBuilder(myForm)
 
   builder.question((x) => x.question1).isRequired(() => true)
+  builder.questionV2((x) => x.question1).isRequired(() => true)
 
   builder
     .question((x) => x.question2)

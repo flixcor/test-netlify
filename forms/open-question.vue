@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from 'vue'
-import { IFormElementStatus } from 'fluent-forms'
+import { IFormQuestionStatus } from 'fluent-forms'
 type Single = number | string
 
 export default Vue.extend({
@@ -27,7 +27,7 @@ export default Vue.extend({
     status: {
       type: Object,
       required: true
-    } as PropOptions<IFormElementStatus<Single>>,
+    } as PropOptions<IFormQuestionStatus<Single>>,
     label: {
       type: String,
       required: false,

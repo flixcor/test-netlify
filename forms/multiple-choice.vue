@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from 'vue'
-import { IFormElementStatus } from 'fluent-forms'
+import { IFormQuestionStatus } from 'fluent-forms'
 
 type Multiple = (string | number)[]
 
@@ -29,7 +29,7 @@ export default Vue.extend({
     status: {
       type: Object,
       required: true
-    } as PropOptions<IFormElementStatus<Multiple>>,
+    } as PropOptions<IFormQuestionStatus<Multiple>>,
     label: {
       type: String,
       required: false,
