@@ -119,7 +119,8 @@ const getState = ({
   justify-content: space-between;
 }
 
-.field:not(:last-child) {
+.field:not(:last-child),
+fieldset:not(:last-child) {
   margin-bottom: 0.75rem;
 }
 
