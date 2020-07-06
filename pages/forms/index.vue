@@ -9,17 +9,22 @@
     </section>
     <section>
       <h2 class="title">Questions</h2>
-      <open-question :status="formState.question1" label="Question 1" />
-      <open-question :status="formState.question2" label="Question 2" />
-      <multiple-choice
-        :status="formState.group1.question3"
-        label="Question 3"
-        :options="[20, 'Thirty', 22.5]"
-      />
-      <fieldset v-for="(group, index) in formState.recurringGroup" :key="index">
-        <legend>Instance {{ index + 1 }} of recurring group</legend>
-        <open-question :status="group.question4" label="Question 4" />
-      </fieldset>
+      <form>
+        <open-question :status="formState.question1" label="Question 1" />
+        <open-question :status="formState.question2" label="Question 2" />
+        <multiple-choice
+          :status="formState.group1.question3"
+          label="Question 3"
+          :options="[20, 'Thirty', 22.5]"
+        />
+        <fieldset
+          v-for="(group, index) in formState.recurringGroup"
+          :key="index"
+        >
+          <legend>Instance {{ index + 1 }} of recurring group</legend>
+          <open-question :status="group.question4" label="Question 4" />
+        </fieldset>
+      </form>
     </section>
     <section>
       <h2 class="title">State</h2>
