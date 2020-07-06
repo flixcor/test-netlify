@@ -33,7 +33,12 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { FormState, FormConfig } from 'fluent-forms'
+import {
+  FormState,
+  FormConfig,
+  IQuestionState,
+  FormQuestion
+} from 'fluent-forms'
 import { OpenQuestion, MultipleChoice } from '~/forms'
 import { IMyForm, getBuilder, prettyPrint } from '~/forms/example'
 
@@ -75,8 +80,8 @@ export default Vue.extend({
         question2,
         group1: { question3 },
         recurringGroup: {
-          0: { $isActive: ia1, $isRequired: ir1, question4: q4_1 },
-          1: { $isActive: ia2, $isRequired: ir2, question4: q4_2 }
+          0: { $isActive: ia1, $isRequired: ir1, question4: q41 },
+          1: { $isActive: ia2, $isRequired: ir2, question4: q42 }
         }
       } = this.formState
       const ret = {
@@ -88,8 +93,8 @@ export default Vue.extend({
           question3: getState(question3)
         },
         recurringGroup: [
-          { $isActive: ia1, $isRequired: ir1, question4: getState(q4_1) },
-          { $isActive: ia2, $isRequired: ir2, question4: getState(q4_2) }
+          { $isActive: ia1, $isRequired: ir1, question4: getState(q41) },
+          { $isActive: ia2, $isRequired: ir2, question4: getState(q42) }
         ]
       }
       return highlight(JSON.stringify(ret, null, 2))
@@ -97,7 +102,12 @@ export default Vue.extend({
   }
 })
 
-const getState = ({ $path, $isActive, $isRequired, $value }) => {
+const getState = ({
+  $path,
+  $isActive,
+  $isRequired,
+  $value
+}: IQuestionState<FormQuestion>) => {
   return { $path, $isActive, $isRequired, $value }
 }
 </script>
