@@ -41,23 +41,19 @@ export function getBuilder(): IFormBuilder<IMyForm> {
   const builder = createFormBuilder(myForm)
   const configurator = builder.getConfigurator()
 
-  configurator.question1.$isRequired(() => true)
+  configurator.question1.$isRequiredWhen(() => true)
 
-  configurator.question2
-    .$isActive((form) => {
-      const { $value, $isActive } = form.question1
-      return $isActive && $value > 3
-    })
-    .$isRequired(() => false)
+  configurator.question2.$isActiveWhen((form) =>
+    form.question1.$isActiveAnd((q) => q > 3)
+  )
 
-  configurator.group1.$isActive((form) => {
-    const { $value, $isActive } = form.question1
-    return $isActive && $value <= 3
-  })
+  configurator.group1.$isActiveWhen((form) =>
+    form.question1.$isActiveAnd((q) => q <= 3)
+  )
 
-  configurator.group1.question3.$isActive(() => true)
+  configurator.group1.question3.$isActiveWhen(() => true)
 
-  configurator.recurringGroup.question4.$isRequired((_, i) => i === 0)
+  configurator.recurringGroup.question4.$isRequiredWhen((_, i) => i === 0)
 
   return builder
 }
@@ -85,22 +81,18 @@ export function prettyPrint() {
   const builder = createFormBuilder(myForm)
   const configurator = builder.getConfigurator()
 
-  configurator.question1.$isRequired(() => true)
+  configurator.question1.$isRequiredWhen(() => true)
 
   configurator.question2
-    .$isActive((form) => {
-      const { $value, $isActive } = form.question1
-      return $isActive && $value > 3
-    })
-    .$isRequired(() => false)
+    .$isActiveWhen((form) => form.question1.$isActiveAnd((q) => q > 3))
+    .$isRequiredWhen(() => false)
 
-  configurator.group1.$isActive((form) => {
-    const { $value, $isActive } = form.question1
-    return $isActive && $value <= 3
-  })
+  configurator.group1.$isActiveWhen((form) =>
+    form.question1.$isActiveAnd((q) => q <= 3)
+  )
 
-  configurator.group1.question3.$isActive(() => true)
+  configurator.group1.question3.$isActiveWhen(() => true)
 
-  configurator.recurringGroup.question4.$isRequired((_, i) => i === 0)
+  configurator.recurringGroup.question4.$isRequiredWhen((_, i) => i === 0)
   `
 }
