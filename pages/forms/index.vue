@@ -9,20 +9,20 @@
     </section>
     <section>
       <h2 class="title">Questions</h2>
-      <open-question :status="statusObj.question1" label="Question 1" />
-      <open-question :status="statusObj.question2" label="Question 2" />
+      <open-question :status="formState.question1" label="Question 1" />
+      <open-question :status="formState.question2" label="Question 2" />
       <multiple-choice
-        :status="statusObj.question3"
+        :status="formState.group1.question3"
         label="Question 3"
         :options="[20, 'Thirty', 22.5]"
       />
-      <fieldset v-for="(group, index) in statusObj.recurringGroup" :key="index">
+      <fieldset v-for="(group, index) in formState.recurringGroup" :key="index">
         <legend>Instance {{ index + 1 }} of recurring group</legend>
         <open-question :status="group.question4" label="Question 4" />
       </fieldset>
     </section>
     <section>
-      <h2 class="title">Status</h2>
+      <h2 class="title">State</h2>
       <pre>
         <code class="javascript hljs" v-html="status">
         </code>
@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { IFormBuilder } from 'fluent-forms'
+import { FormState, FormConfig } from 'fluent-forms'
 import { OpenQuestion, MultipleChoice } from '~/forms'
 import { IMyForm, getBuilder, prettyPrint } from '~/forms/example'
 
@@ -52,37 +52,54 @@ export default Vue.extend({
     MultipleChoice
   },
   data() {
+    const builder = getBuilder()
     const setup: string = highlight(prettyPrint())
-    const formBuilder: IFormBuilder<IMyForm> = getBuilder()
+    const formState: FormState<IMyForm> = builder.getState()
+    const formConfig: FormConfig<IMyForm> = builder.getConfigurator()
+    // const { $isActive, $isRequired, $value } = formState.group1.question3
     return {
       setup,
-      formBuilder
+      formState,
+      formConfig,
+      group1: formState.group1?.$isActive,
+      question1: formState.question1?.$isActive,
+      question2: formState.question2?.$isActive,
+      question3: formState.group1?.question3?.$isActive,
+      group2: formState.recurringGroup[1]?.question4
     }
   },
   computed: {
-    statusObj(): Record<any, any> {
-      const formBuilder = this.formBuilder
-      const groupBuilder = formBuilder.recurringGroup((x) => x.recurringGroup)
-      const count = groupBuilder.count()
-      const recurringGroup = [...Array(count).keys()].map((i) => ({
-        question4: groupBuilder.getStatus(i, (x) => x.question4)
-      }))
-
-      return {
-        question1: formBuilder.getStatus((x) => x.question1),
-        question2: formBuilder.getStatus((x) => x.question2),
-        question3: formBuilder.getStatus((x) => x.group1.question3),
-        recurringGroup
-      }
-    },
     status(): string {
-      return highlight(JSON.stringify(this.statusObj, null, 2))
-    },
-    state(): unknown {
-      return this.formBuilder.getState()
+      const {
+        question1,
+        question2,
+        group1: { question3 },
+        recurringGroup: {
+          0: { $isActive: ia1, $isRequired: ir1, question4: q4_1 },
+          1: { $isActive: ia2, $isRequired: ir2, question4: q4_2 }
+        }
+      } = this.formState
+      const ret = {
+        question1: getState(question1),
+        question2: getState(question2),
+        group1: {
+          $isRequired: this.formState.group1.$isRequired,
+          $isActive: this.formState.group1.$isActive,
+          question3: getState(question3)
+        },
+        recurringGroup: [
+          { $isActive: ia1, $isRequired: ir1, question4: getState(q4_1) },
+          { $isActive: ia2, $isRequired: ir2, question4: getState(q4_2) }
+        ]
+      }
+      return highlight(JSON.stringify(ret, null, 2))
     }
   }
 })
+
+const getState = ({ $path, $isActive, $isRequired, $value }) => {
+  return { $path, $isActive, $isRequired, $value }
+}
 </script>
 <style>
 .flex {

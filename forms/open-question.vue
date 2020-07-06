@@ -1,16 +1,20 @@
 <template>
-  <div v-if="status.active" class="field">
-    <label v-if="label" :for="uuid" class="label" :required="status.required">{{
-      label
-    }}</label>
+  <div v-if="status && status.$isActive" class="field">
+    <label
+      v-if="label"
+      :for="uuid"
+      class="label"
+      :required="status.$isRequired"
+      >{{ label }}</label
+    >
     <div class="control">
       <input
         :id="uuid"
-        :value="status.value"
-        :type="typeof status.value === 'number' ? 'number' : 'text'"
-        :data-path="status.path"
+        :value="status.$value"
+        :type="typeof status.$value === 'number' ? 'number' : 'text'"
+        :data-path="status.$path"
         class="input"
-        :required="status.required"
+        :required="status.$isRequired"
         @input="setValue($event.target.value)"
       />
     </div>
@@ -19,7 +23,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from 'vue'
-import { IFormQuestionStatus } from 'fluent-forms'
+import { IQuestionState } from 'fluent-forms'
 type Single = number | string
 
 export default Vue.extend({
@@ -27,7 +31,7 @@ export default Vue.extend({
     status: {
       type: Object,
       required: true
-    } as PropOptions<IFormQuestionStatus<Single>>,
+    } as PropOptions<IQuestionState<Single>>,
     label: {
       type: String,
       required: false,
@@ -37,19 +41,30 @@ export default Vue.extend({
   data() {
     return { uuid: '' }
   },
+  computed: {
+    isRequired() {
+      return this.status && this.status.$isRequired
+    },
+    isActive() {
+      return this.status && this.status.$isActive
+    },
+    value() {
+      return this.status && this.status.$value
+    }
+  },
   mounted() {
     this.uuid = (this as any)._uid
   },
   methods: {
     setValue(newValue: Single) {
-      if (typeof this.status.value === 'number') {
+      if (typeof this.status.$value === 'number') {
         const newNumVal = Number(newValue)
 
         if (isNaN(newNumVal)) return
         newValue = newNumVal
       }
 
-      this.status.set(newValue)
+      this.status.$value = newValue
     }
   }
 })

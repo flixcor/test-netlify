@@ -20,7 +20,7 @@
     "@nuxtjs/bulma": "^1.2.1",
     "@nuxtjs/markdownit": "^1.2.9",
     "@nuxtjs/pwa": "^3.0.0-0",
-    "fluent-forms": "0.0.7",
+    "fluent-forms": "0.0.8",
     "highlight.js": "^10.0.3",
     "nuxt": "^2.0.0",
     "vue-highlightjs": "^1.3.3",
