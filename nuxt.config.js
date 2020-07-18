@@ -23,7 +23,8 @@ export default {
       return [...blogs, ...presentations]
     }
   },
-  mode: 'universal',
+  mode: 'spa',
+  target: 'static',
   /*
    ** Headers of the page
    */

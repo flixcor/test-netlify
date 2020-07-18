@@ -31,7 +31,7 @@ type Multiple = (string | number)[]
 export default Vue.extend({
   props: {
     status: {
-      type: Object,
+      type: [Object, Array],
       required: true
     } as PropOptions<IQuestionState<Multiple>>,
     label: {

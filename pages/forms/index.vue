@@ -10,20 +10,21 @@
     <section>
       <h2 class="title">Questions</h2>
       <form>
-        <open-question :status="formState.question1" label="Question 1" />
-        <open-question :status="formState.question2" label="Question 2" />
+        <open-question :status="question1" label="Question 1" />
+        <open-question :status="question2" label="Question 2" />
         <multiple-choice
-          :status="formState.group1.question3"
+          :status="question3"
           label="Question 3"
           :options="[20, 'Thirty', 22.5]"
         />
-        <fieldset
-          v-for="(group, index) in formState.recurringGroup"
-          :key="index"
+        <recurring-group
+          :state="formState.recurringGroup"
+          :create-empty="() => ({ question4: '' })"
         >
-          <legend>Instance {{ index + 1 }} of recurring group</legend>
-          <open-question :status="group.question4" label="Question 4" />
-        </fieldset>
+          <template v-slot="{ group }">
+            <open-question :status="group.question4" label="Question 4" />
+          </template>
+        </recurring-group>
       </form>
     </section>
     <section>
@@ -38,13 +39,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import {
-  FormState,
-  FormConfig,
-  IQuestionState,
-  FormQuestion
-} from 'fluent-forms'
-import { OpenQuestion, MultipleChoice } from '~/forms'
+import { FormConfig, IQuestionState, FormQuestion } from 'fluent-forms'
+import { OpenQuestion, MultipleChoice, RecurringGroup } from '~/forms'
 import { IMyForm, getBuilder, prettyPrint } from '~/forms/example'
 
 const hljs = require('highlight.js/lib/core') // require only the core library
@@ -59,23 +55,30 @@ const highlight = (x: string) => hljs.highlight('javascript', x).value
 export default Vue.extend({
   components: {
     OpenQuestion,
-    MultipleChoice
+    MultipleChoice,
+    RecurringGroup
   },
   data() {
     const builder = getBuilder()
+    const form = builder.getForm()
     const setup: string = highlight(prettyPrint())
-    const formState: FormState<IMyForm> = builder.getState()
     const formConfig: FormConfig<IMyForm> = builder.getConfigurator()
-    // const { $isActive, $isRequired, $value } = formState.group1.question3
+    const formState = builder.getState()
+    const {
+      question1,
+      question2,
+      group1: { question3 }
+    } = formState
     return {
+      builder,
       setup,
-      formState,
+      form,
+      key: 0,
       formConfig,
-      group1: formState.group1?.$isActive,
-      question1: formState.question1?.$isActive,
-      question2: formState.question2?.$isActive,
-      question3: formState.group1?.question3?.$isActive,
-      group2: formState.recurringGroup[1]?.question4
+      formState,
+      question1,
+      question2,
+      question3
     }
   },
   computed: {
@@ -84,10 +87,7 @@ export default Vue.extend({
         question1,
         question2,
         group1: { question3 },
-        recurringGroup: {
-          0: { $isActive: ia1, $isRequired: ir1, question4: q41 },
-          1: { $isActive: ia2, $isRequired: ir2, question4: q42 }
-        }
+        recurringGroup
       } = this.formState
       const ret = {
         question1: getState(question1),
@@ -97,12 +97,24 @@ export default Vue.extend({
           $isActive: this.formState.group1.$isActive,
           question3: getState(question3)
         },
-        recurringGroup: [
-          { $isActive: ia1, $isRequired: ir1, question4: getState(q41) },
-          { $isActive: ia2, $isRequired: ir2, question4: getState(q42) }
-        ]
+        recurringGroup: recurringGroup.map(
+          ({ $path, $isActive, $isRequired, question4 }) => ({
+            $path,
+            $isActive,
+            $isRequired,
+            question4: getState(question4)
+          })
+        )
       }
       return highlight(JSON.stringify(ret, null, 2))
+    }
+  },
+  watch: {
+    form: {
+      deep: true,
+      handler() {
+        this.key++
+      }
     }
   }
 })

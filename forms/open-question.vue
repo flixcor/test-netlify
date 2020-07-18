@@ -11,7 +11,7 @@
       <input
         :id="uuid"
         :value="status.$value"
-        :type="typeof status.$value === 'number' ? 'number' : 'text'"
+        :type="typeof value === 'number' ? 'number' : 'text'"
         :data-path="status.$path"
         class="input"
         :required="status.$isRequired"
@@ -65,6 +65,8 @@ export default Vue.extend({
       }
 
       this.status.$value = newValue
+
+      this.$emit('input')
     }
   }
 })
