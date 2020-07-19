@@ -9,11 +9,11 @@
     </section>
     <section>
       <h2 class="title">Questions</h2>
-      <form>
-        <open-question :status="question1" label="Question 1" />
-        <open-question :status="question2" label="Question 2" />
+      <form method="post" enctype="multipart/form-data">
+        <open-question :state="question1" label="Question 1" />
+        <open-question :state="question2" label="Question 2" />
         <multiple-choice
-          :status="question3"
+          :state="question3"
           label="Question 3"
           :options="[20, 'Thirty', 22.5]"
         />
@@ -22,15 +22,16 @@
           :create-empty="() => ({ question4: '' })"
         >
           <template v-slot="{ group }">
-            <open-question :status="group.question4" label="Question 4" />
+            <open-question :state="group.question4" label="Question 4" />
           </template>
         </recurring-group>
+        <button type="submit">Submit</button>
       </form>
     </section>
     <section>
       <h2 class="title">State</h2>
       <pre>
-        <code class="javascript hljs" v-html="status">
+        <code class="javascript hljs" v-html="state">
         </code>
       </pre>
     </section>
@@ -82,7 +83,7 @@ export default Vue.extend({
     }
   },
   computed: {
-    status(): string {
+    state(): string {
       const {
         question1,
         question2,
@@ -133,7 +134,11 @@ const getState = ({
   display: flex;
   margin-top: 50px;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-evenly;
+}
+
+.flex section {
+  flex: 0 1 150px;
 }
 
 .field:not(:last-child),
@@ -216,32 +221,15 @@ body,
 button,
 input,
 select,
-textarea {
+textarea,
+fieldset {
   font-family: BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     'Helvetica', 'Arial', sans-serif;
 }
 
-.container {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-@media only screen and (min-width: 1044px) {
-  .container {
-    max-width: 980px;
-  }
-}
-
-@media only screen and (min-width: 1344px) {
-  .container {
-    max-width: 1280px;
-  }
-}
-
-@media only screen and (min-width: 1644px) {
-  .container {
-    max-width: 1580px;
-  }
+fieldset {
+  min-width: 300px;
+  padding: 20px;
 }
 </style>

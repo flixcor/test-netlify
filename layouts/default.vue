@@ -16,7 +16,7 @@
         </div>
       </nav>
     </div>
-    <main class="container">
+    <main class="">
       <nuxt />
     </main>
   </div>

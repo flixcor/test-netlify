@@ -1,20 +1,21 @@
 <template>
-  <div v-if="status && status.$isActive" class="field">
+  <div v-if="state && state.$isActive" class="field">
     <label
       v-if="label"
       :for="uuid"
       class="label"
-      :required="status.$isRequired"
+      :required="state.$isRequired"
       >{{ label }}</label
     >
     <div class="control">
       <input
         :id="uuid"
-        :value="status.$value"
+        :value="state.$value"
         :type="typeof value === 'number' ? 'number' : 'text'"
-        :data-path="status.$path"
+        :data-path="state.$path"
+        :name="state.$path"
         class="input"
-        :required="status.$isRequired"
+        :required="state.$isRequired"
         @input="setValue($event.target.value)"
       />
     </div>
@@ -28,7 +29,7 @@ type Single = number | string
 
 export default Vue.extend({
   props: {
-    status: {
+    state: {
       type: Object,
       required: true
     } as PropOptions<IQuestionState<Single>>,
@@ -43,13 +44,13 @@ export default Vue.extend({
   },
   computed: {
     isRequired() {
-      return this.status && this.status.$isRequired
+      return this.state && this.state.$isRequired
     },
     isActive() {
-      return this.status && this.status.$isActive
+      return this.state && this.state.$isActive
     },
     value() {
-      return this.status && this.status.$value
+      return this.state && this.state.$value
     }
   },
   mounted() {
@@ -57,14 +58,14 @@ export default Vue.extend({
   },
   methods: {
     setValue(newValue: Single) {
-      if (typeof this.status.$value === 'number') {
+      if (typeof this.state.$value === 'number') {
         const newNumVal = Number(newValue)
 
         if (isNaN(newNumVal)) return
         newValue = newNumVal
       }
 
-      this.status.$value = newValue
+      this.state.$value = newValue
 
       this.$emit('input')
     }

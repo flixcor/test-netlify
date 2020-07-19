@@ -4,7 +4,7 @@
       v-if="label"
       :for="uuid"
       class="label"
-      :required="status.$isRequired"
+      :required="state.$isRequired"
       >{{ label }}</label
     >
     <div class="control">
@@ -12,7 +12,8 @@
         <input
           :id="`${uuid}_${index}`"
           v-model="currentValue"
-          :data-qa="`${status.$path}_${index}`"
+          :data-path="`${state.$path}_${index}`"
+          :name="state.$path"
           type="checkbox"
           :value="option"
         />
@@ -30,7 +31,7 @@ type Multiple = (string | number)[]
 
 export default Vue.extend({
   props: {
-    status: {
+    state: {
       type: [Object, Array],
       required: true
     } as PropOptions<IQuestionState<Multiple>>,
@@ -47,26 +48,26 @@ export default Vue.extend({
   data() {
     return {
       uuid: '',
-      currentValue: this.status && this.status.$value
+      currentValue: this.state && this.state.$value
     }
   },
   computed: {
     isRequired() {
-      return this.status && this.status.$isRequired
+      return this.state && this.state.$isRequired
     },
     isActive() {
-      return this.status && this.status.$isActive
+      return this.state && this.state.$isActive
     },
     value() {
-      return this.status && this.status.$value
+      return this.state && this.state.$value
     }
   },
   watch: {
     currentValue: {
       deep: true,
       handler(newVal: Multiple) {
-        if (this.status) {
-          this.status.$value = newVal
+        if (this.state) {
+          this.state.$value = newVal
         }
       }
     }
