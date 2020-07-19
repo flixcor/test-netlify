@@ -9,7 +9,11 @@
     </section>
     <section>
       <h2 class="title">Questions</h2>
-      <form method="post" enctype="multipart/form-data">
+      <form
+        method="post"
+        enctype="multipart/form-data"
+        @submit.prevent="submit"
+      >
         <open-question :state="question1" label="Question 1" />
         <open-question :state="question2" label="Question 2" />
         <multiple-choice
@@ -40,7 +44,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { FormConfig, IQuestionState, FormQuestion } from 'fluent-forms'
+import { FormConfig, IQuestionState, FormQuestion, Form } from 'fluent-forms'
 import { OpenQuestion, MultipleChoice, RecurringGroup } from '~/forms'
 import { IMyForm, getBuilder, prettyPrint } from '~/forms/example'
 
@@ -110,11 +114,13 @@ export default Vue.extend({
       return highlight(JSON.stringify(ret, null, 2))
     }
   },
-  watch: {
-    form: {
-      deep: true,
-      handler() {
-        this.key++
+  methods: {
+    submit(e: Event) {
+      const form = e.target as any
+
+      if (form.checkValidity()) {
+        const formData = JSON.stringify(serializeArray(form))
+        alert('Form data: \n\n' + formData)
       }
     }
   }
@@ -128,7 +134,42 @@ const getState = ({
 }: IQuestionState<FormQuestion>) => {
   return { $path, $isActive, $isRequired, $value }
 }
+
+/*!
+ * Serialize all form data into an array of key/value pairs
+ * (c) 2020 Chris Ferdinandi, MIT License, https://gomakethings.com
+ * @param  {Node}   form The form to serialize
+ * @return {Array}       The serialized form data
+ */
+function serializeArray(form: Form) {
+  const arr: unknown[] = []
+  Array.prototype.slice.call(form.elements).forEach(function(field) {
+    if (
+      !field.name ||
+      field.disabled ||
+      ['file', 'reset', 'submit', 'button'].includes(field.type)
+    )
+      return
+    if (field.type === 'select-multiple') {
+      Array.prototype.slice.call(field.options).forEach(function(option) {
+        if (!option.selected) return
+        arr.push({
+          name: field.name,
+          value: option.value
+        })
+      })
+      return
+    }
+    if (['checkbox', 'radio'].includes(field.type) && !field.checked) return
+    arr.push({
+      name: field.name,
+      value: field.value
+    })
+  })
+  return arr
+}
 </script>
+
 <style>
 .flex {
   display: flex;
