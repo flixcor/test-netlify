@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="showNav()" class="container">
-      <nav class="navbar" role="navigation" aria-label="main navigation">
+      <nav class="navbar" aria-label="main navigation">
         <div class="navbar-brand">
           <nuxt-link class="navbar-item" to="/">Home</nuxt-link>
           <nuxt-link
@@ -24,6 +24,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import 'prismjs/themes/prism-tomorrow.css'
 export default Vue.extend({
   methods: {
     showNav() {
@@ -36,18 +37,6 @@ export default Vue.extend({
 </script>
 
 <style>
-html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
-  word-spacing: 1px;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
-}
-
 *,
 *:before,
 *:after {
@@ -55,32 +44,122 @@ html {
   margin: 0;
 }
 
-.button--green {
-  display: inline-block;
+pre {
+  max-width: 100vw;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+}
+
+a {
+  min-height: 20px;
+  min-width: 48px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.flex {
+  display: flex;
+  margin-top: 50px;
+  flex-wrap: wrap;
+}
+
+.flex section {
+  flex: 0 1 150px;
+}
+
+.field:not(:last-child),
+fieldset:not(:last-child) {
+  margin-bottom: 0.75rem;
+}
+
+h2 {
+  color: #363636;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.125;
+  word-break: break-word;
+  margin-bottom: 1rem;
+}
+
+.label:not(:last-child) {
+  margin-bottom: 0.5em;
+}
+
+.label {
+  color: #363636;
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.label.required:after {
+  content: ' *';
+  color: red;
+}
+
+.control {
+  box-sizing: border-box;
+  clear: both;
+  font-size: 1rem;
+  position: relative;
+  text-align: left;
+}
+
+input:not([type='checkbox']) {
+  box-shadow: inset 0 0.0625em 0.125em rgba(10, 10, 10, 0.05);
+  max-width: 100%;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #dbdbdb;
   border-radius: 4px;
-  border: 1px solid #3b8070;
-  color: #3b8070;
-  text-decoration: none;
-  padding: 10px 30px;
-}
-
-.button--green:hover {
-  color: #fff;
-  background-color: #3b8070;
-}
-
-.button--grey {
-  display: inline-block;
   border-radius: 4px;
-  border: 1px solid #35495e;
-  color: #35495e;
-  text-decoration: none;
-  padding: 10px 30px;
-  margin-left: 15px;
+  color: #363636;
+  -webkit-appearance: none;
+  align-items: center;
+  box-shadow: none;
+  display: inline-flex;
+  font-size: 1rem;
+  height: 2.5em;
+  justify-content: flex-start;
+  line-height: 1.5;
+  padding-bottom: calc(0.5em - 1px);
+  padding-left: calc(0.75em - 1px);
+  padding-right: calc(0.75em - 1px);
+  padding-top: calc(0.5em - 1px);
+  position: relative;
+  vertical-align: top;
 }
 
-.button--grey:hover {
-  color: #fff;
-  background-color: #35495e;
+input:focus,
+input:active {
+  border-color: #3273dc;
+  box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
+  outline: none;
+}
+
+.checkbox,
+.radio {
+  cursor: pointer;
+  display: block;
+}
+
+body,
+button,
+input,
+select,
+textarea,
+fieldset {
+  font-family: BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    'Helvetica', 'Arial', sans-serif;
+}
+
+fieldset {
+  padding: 20px;
+}
+
+form {
+  width: 300px;
 }
 </style>

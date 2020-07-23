@@ -1,11 +1,11 @@
 <template>
-  <div :key="key">
+  <div class="field">
     <button v-if="state.length === 0" type="button" @click="append()">
       +
     </button>
     <fieldset v-for="(group, index) in state" :key="index">
-      <button type="button" @click="remove(index)">-</button>
       <legend>Instance {{ index + 1 }} of recurring group</legend>
+      <button type="button" @click="remove(index)">-</button>
       <slot :group="group"></slot>
       <button type="button" @click="append()">+</button>
     </fieldset>
@@ -24,11 +24,6 @@ export default Vue.extend({
       type: Function,
       default: () => ({})
     } as PropOptions<() => FormGroup>
-  },
-  data() {
-    return {
-      key: 0
-    }
   },
   methods: {
     remove(i: number) {

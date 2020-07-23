@@ -2,14 +2,13 @@
   <div v-if="state && state.$isActive" class="field">
     <label
       v-if="label"
-      :for="uuid"
-      class="label"
-      :required="state.$isRequired"
+      :for="state.$path"
+      :class="{ label, required: state.$isRequired }"
       >{{ label }}</label
     >
     <div class="control">
       <input
-        :id="uuid"
+        :id="state.$path"
         :value="state.$value"
         :type="typeof value === 'number' ? 'number' : 'text'"
         :data-path="state.$path"
@@ -40,7 +39,7 @@ export default Vue.extend({
     }
   },
   data() {
-    return { uuid: '' }
+    return { uuid: this.state.$path }
   },
   computed: {
     isRequired() {

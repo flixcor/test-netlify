@@ -1,23 +1,18 @@
-import {
-  createFormBuilder,
-  Form,
-  FormGroup,
-  IFormBuilder,
-  FormConfig
-} from 'fluent-forms'
+import { createFormBuilder, IFormBuilder, FormConfig } from 'fluent-forms'
 
-export interface IMyForm extends Form {
+export type IMyForm = {
   question1: number
   question2: string
   group1: IGroup1
   recurringGroup: Array<IGroup2>
+  file: URL
 }
 
-export interface IGroup1 extends FormGroup {
+export type IGroup1 = {
   question3: (number | string)[]
 }
 
-export interface IGroup2 extends FormGroup {
+export type IGroup2 = {
   question4: string
 }
 
@@ -35,10 +30,11 @@ export function getBuilder(): IFormBuilder<IMyForm> {
       {
         question4: 'example 2'
       }
-    ]
+    ],
+    file: new URL('https://www.google.com')
   }
 
-  const configurator: FormConfig<IMyForm> = {
+  const config: FormConfig<IMyForm> = {
     question1: {
       $isRequired: true
     },
@@ -63,10 +59,11 @@ export function getBuilder(): IFormBuilder<IMyForm> {
           }
         }
       }
-    ]
+    ],
+    file: {}
   }
 
-  const builder = createFormBuilder(myForm, configurator)
+  const builder = createFormBuilder<IMyForm>(myForm, config)
 
   return builder
 }
@@ -88,7 +85,8 @@ export function prettyPrint() {
       {
         question4: 'example 2'
       }
-    ]
+    ],
+    file: new URL('https://www.google.com')
   }
 
   const configurator: FormConfig<IMyForm> = {
@@ -116,7 +114,8 @@ export function prettyPrint() {
           }
         }
       }
-    ]
+    ],
+    file: {}
   }
 
   const builder = createFormBuilder(myForm, configurator)

@@ -3,8 +3,7 @@
     <section>
       <h2 class="title">Setup</h2>
       <pre>
-        <code class="typescript hljs" v-html="setup">
-        </code>
+        <code class="language-javascript" v-html="setup" />
       </pre>
     </section>
     <section>
@@ -29,13 +28,14 @@
             <open-question :state="group.question4" label="Question 4" />
           </template>
         </recurring-group>
+        <file-question :state="formState.file" label="File" />
         <button type="submit">Submit</button>
       </form>
     </section>
     <section>
       <h2 class="title">State</h2>
       <pre>
-        <code class="javascript hljs" v-html="state">
+        <code class="language-javascript" v-html="state">
         </code>
       </pre>
     </section>
@@ -45,23 +45,24 @@
 <script lang="ts">
 import Vue from 'vue'
 import { FormConfig, IQuestionState, FormQuestion, Form } from 'fluent-forms'
-import { OpenQuestion, MultipleChoice, RecurringGroup } from '~/forms'
+import Prism from 'prismjs'
+import {
+  OpenQuestion,
+  MultipleChoice,
+  RecurringGroup,
+  FileQuestion
+} from '~/forms'
 import { IMyForm, getBuilder, prettyPrint } from '~/forms/example'
 
-const hljs = require('highlight.js/lib/core') // require only the core library
-// separately require languages
-hljs.registerLanguage(
-  'javascript',
-  require('highlight.js/lib/languages/javascript')
-)
-
-const highlight = (x: string) => hljs.highlight('javascript', x).value
+const highlight = (s: string) =>
+  Prism.highlight(s, Prism.languages.javascript, 'javascript')
 
 export default Vue.extend({
   components: {
     OpenQuestion,
     MultipleChoice,
-    RecurringGroup
+    RecurringGroup,
+    FileQuestion
   },
   data() {
     const builder = getBuilder()
@@ -92,7 +93,8 @@ export default Vue.extend({
         question1,
         question2,
         group1: { question3 },
-        recurringGroup
+        recurringGroup,
+        file
       } = this.formState
       const ret = {
         question1: getState(question1),
@@ -109,10 +111,14 @@ export default Vue.extend({
             $isRequired,
             question4: getState(question4)
           })
-        )
+        ),
+        file: getState(file)
       }
-      return highlight(JSON.stringify(ret, null, 2))
+      return highlight('\n' + JSON.stringify(ret, null, 2))
     }
+  },
+  mounted() {
+    Prism.highlightAll(false)
   },
   methods: {
     submit(e: Event) {
@@ -169,108 +175,3 @@ function serializeArray(form: Form) {
   return arr
 }
 </script>
-
-<style>
-.flex {
-  display: flex;
-  margin-top: 50px;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-}
-
-.flex section {
-  flex: 0 1 150px;
-}
-
-.field:not(:last-child),
-fieldset:not(:last-child) {
-  margin-bottom: 0.75rem;
-}
-
-h2 {
-  color: #363636;
-  font-size: 2rem;
-  font-weight: 600;
-  line-height: 1.125;
-  word-break: break-word;
-  margin-bottom: 1rem;
-}
-
-.label:not(:last-child) {
-  margin-bottom: 0.5em;
-}
-
-.label {
-  color: #363636;
-  display: block;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.label[required]:after {
-  content: ' *';
-  color: red;
-}
-
-.control {
-  box-sizing: border-box;
-  clear: both;
-  font-size: 1rem;
-  position: relative;
-  text-align: left;
-}
-
-input:not([type='checkbox']) {
-  box-shadow: inset 0 0.0625em 0.125em rgba(10, 10, 10, 0.05);
-  max-width: 100%;
-  width: 100%;
-  background-color: white;
-  border: 1px solid #dbdbdb;
-  border-radius: 4px;
-  border-radius: 4px;
-  color: #363636;
-  -webkit-appearance: none;
-  align-items: center;
-  box-shadow: none;
-  display: inline-flex;
-  font-size: 1rem;
-  height: 2.5em;
-  justify-content: flex-start;
-  line-height: 1.5;
-  padding-bottom: calc(0.5em - 1px);
-  padding-left: calc(0.75em - 1px);
-  padding-right: calc(0.75em - 1px);
-  padding-top: calc(0.5em - 1px);
-  position: relative;
-  vertical-align: top;
-}
-
-input:focus,
-input:active {
-  border-color: #3273dc;
-  box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
-  outline: none;
-}
-
-.checkbox,
-.radio {
-  cursor: pointer;
-  display: block;
-}
-
-body,
-button,
-input,
-select,
-textarea,
-fieldset {
-  font-family: BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    'Helvetica', 'Arial', sans-serif;
-}
-
-fieldset {
-  min-width: 300px;
-  padding: 20px;
-}
-</style>

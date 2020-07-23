@@ -2,15 +2,14 @@
   <div v-if="isActive" class="field">
     <label
       v-if="label"
-      :for="uuid"
-      class="label"
-      :required="state.$isRequired"
+      :for="state.$path"
+      :class="{ label, required: state.$isRequired }"
       >{{ label }}</label
     >
     <div class="control">
       <label v-for="(option, index) in options" :key="index" class="checkbox">
         <input
-          :id="`${uuid}_${index}`"
+          :id="`${state.$path}_${index}`"
           v-model="currentValue"
           :data-path="`${state.$path}_${index}`"
           :name="state.$path"
