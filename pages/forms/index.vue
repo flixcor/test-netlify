@@ -3,7 +3,7 @@
     <section>
       <h2 class="title">Setup</h2>
       <pre>
-        <code class="language-javascript" v-html="setup" />
+        <code class="language-typescript" v-html="setup" />
       </pre>
     </section>
     <section>
@@ -35,7 +35,7 @@
     <section>
       <h2 class="title">State</h2>
       <pre>
-        <code class="language-javascript" v-html="state">
+        <code class="language-typescript" v-html="state">
         </code>
       </pre>
     </section>
@@ -46,6 +46,7 @@
 import Vue from 'vue'
 import { FormConfig, IQuestionState, FormQuestion, Form } from 'fluent-forms'
 import Prism from 'prismjs'
+require('prismjs/components/prism-typescript')
 import {
   OpenQuestion,
   MultipleChoice,
@@ -55,7 +56,7 @@ import {
 import { IMyForm, getBuilder, prettyPrint } from '~/forms/example'
 
 const highlight = (s: string) =>
-  Prism.highlight(s, Prism.languages.javascript, 'javascript')
+  Prism.highlight(s, Prism.languages.typescript, 'typescript')
 
 export default Vue.extend({
   components: {
