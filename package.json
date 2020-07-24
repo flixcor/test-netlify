@@ -9,7 +9,8 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt build && nuxt export",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "serve": "nuxt build && nuxt export && nuxt serve"
   },
   "lint-staged": {
     "*.{js,vue}": "npm run lint",
