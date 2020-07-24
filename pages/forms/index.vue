@@ -2,7 +2,7 @@
   <div class="flex">
     <section>
       <h2 class="title">Setup</h2>
-      <pre>
+      <pre class="language-typescript">
         <code class="language-typescript" v-html="setup" />
       </pre>
     </section>
@@ -34,7 +34,7 @@
     </section>
     <section>
       <h2 class="title">State</h2>
-      <pre>
+      <pre class="language-typescript">
         <code class="language-typescript" v-html="state">
         </code>
       </pre>
